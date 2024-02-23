@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Octopus.Presentation.Http;
+﻿namespace Octopus.Presentation.Http;
 
 public static class ServiceCollectionExtension
 {
@@ -8,6 +6,7 @@ public static class ServiceCollectionExtension
     {
         services.AddControllers();
 
+        services.AddAutoMapper(typeof(ServiceCollectionExtension).Assembly);
 
         return services;
     }

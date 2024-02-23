@@ -21,7 +21,7 @@ public abstract record PaginationFilterBase : IPaginationFilter
     public int PageSize
     {
         get => _pageSize;
-        init => _pageSize = value is < 1 or > 300 ? 10 : value;
+        init => _pageSize = value is < 1 or > 100 ? 10 : value;
     }
 
     public int Skip => (PageNumber - 1) * PageSize;

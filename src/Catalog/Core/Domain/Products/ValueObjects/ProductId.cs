@@ -11,6 +11,14 @@ public class ProductId : IdBase<Guid>
 
     public static ProductId Create(Guid id) => new(id);
 
+    public static ProductId Create(string value)
+    {
+        if (Guid.TryParse(value, out Guid id))
+            return new(id);
+
+        throw new ArgumentException();
+    }
+
     public static ProductId New() => new(Guid.NewGuid());
 
     public override string ToString() => Value.ToString("N");

@@ -1,6 +1,6 @@
 ﻿namespace Octopus.Core.Contract.Queries;
 
-public sealed record Pagination<TResponse>
+public record Pagination<TResponse>
 {
     private Pagination(int pageNumber, int pageSize)
     {
@@ -10,7 +10,7 @@ public sealed record Pagination<TResponse>
         Items = new List<TResponse>(0).AsReadOnly();
     }
 
-    public Pagination(int totalCount, int pageNumber, int pageSize, IEnumerable<TResponse> items)
+    public Pagination(long totalCount, int pageNumber, int pageSize, IEnumerable<TResponse> items)
     {
         TotalCount = totalCount;
         PageNumber = pageNumber;
@@ -23,7 +23,7 @@ public sealed record Pagination<TResponse>
         return new Pagination<TResponse>(pageSize, pageNumber);
     }
 
-    public int TotalCount { get; }
+    public long  TotalCount { get; }
 
     public int PageNumber { get; }
 
