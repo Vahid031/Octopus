@@ -1,4 +1,5 @@
 ﻿using Octopus.Catalog.Core.Application;
+using Octopus.Catalog.Core.Domain;
 using Octopus.Catalog.Core.Mongo;
 using Octopus.Catalog.Presentation.Http;
 using Octopus.Host.Middlewares;
@@ -20,7 +21,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddMongoServices()
+            .AddMongoServices(_configuration)
             .AddHttpServices()
             //catalog
             .AddCatalogDomainServices()

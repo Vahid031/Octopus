@@ -8,7 +8,8 @@ namespace Octopus.Catalog.Core.Mongo.Products;
 
 internal class MongoProductRepository : MongoRepositoryBase<Product, ProductId>, IProductRepository
 {
-    public MongoProductRepository(IUnitOfWork unitOfWork, IMongoCollection<Product> collection) 
+    public const string CollectionName = "Products";
+    public MongoProductRepository(IUnitOfWork unitOfWork, IMongoCollection<Product> collection)
         : base(unitOfWork, collection)
     {
     }

@@ -12,25 +12,10 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped<IProductRepository, MongoProductRepository>();
 
-
-
-
-
-
-        services.AddSingleton<IMongoDatabase>(sp =>
-        {
-            var mongoClient = sp.GetRequiredService<IMongoClient>();
-            return mongoClient.GetDatabase("UnitOfWorkWithMongoDb");
-        });
-        services.AddSingleton<IMongoClient>(sp =>
-        {
-            var mongoClient = new MongoClient("mongodb://vahid:admin1234@localhost:27017/UnitOfWorkWithMongoDb?retryWrites=false");
-            return mongoClient;
-        });
         services.AddSingleton<IMongoCollection<Product>>(sp =>
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<Product>("Products");
+            return database.GetCollection<Product>(MongoProductRepository.CollectionName);
         });
 
         return services;

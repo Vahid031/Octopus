@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Octopus.Catalog.Core.Application;
+namespace Octopus.Catalog.Core.Domain;
 
 public static class ServiceCollectionExtension
 {

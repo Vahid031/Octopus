@@ -10,7 +10,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Domain\Domain.csproj" />
+		<PackageReference Include="MediatR" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -8,17 +8,18 @@ public class Product : AggregateRoot<ProductId>
 {
     private Product() { }
 
-    private Product(string name, string code, string sku)
+    private Product(ProductId id, string name, string code, string sku)
     {
         CheckRule(new ProductNameMustAtLeast5CharacterRule(name));
 
+        Id = id;
         Name = name;
         Code = code;
         Sku = sku;
     }
 
-    public static Product Create(string name, string code, string sku)
-        => new(name, code, sku);
+    public static Product Create(ProductId id, string name, string code, string sku)
+        => new(id, name, code, sku);
 
     public string Name { get; private protected set; }
     public string Code { get; private protected set; }
