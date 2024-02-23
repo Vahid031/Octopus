@@ -1,0 +1,11 @@
+<Project>
+    <PropertyGroup>
+        <LangVersion>Latest</LangVersion>
+        <ImplicitUsings>false</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <Author>Vahid Goodarzi</Author>
+        <Author>Sajad Mirzaei</Author>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+</Project>

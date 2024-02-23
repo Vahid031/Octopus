@@ -1,0 +1,12 @@
+<Project>
+	<ItemGroup>
+		<PackageReference Update="Swashbuckle.AspNetCore" Version="6.5.0"/>
+		<PackageReference Update="Serilog.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Update="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Update="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Update="MongoDB.Driver" Version="2.24.0" />
+		<PackageReference Update="AutoMapper" Version="13.0.1" />
+		<PackageReference Update="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+	</ItemGroup>
+</Project>
