@@ -30,7 +30,7 @@ try
         .Enrich.WithProperty("serviceVersion", AppInfo.ServiceVersion)
         .Enrich.WithProperty("env", builder.Environment.EnvironmentName)
         //.Enrich.With<TelemetryEventEnricher>()
-        //.ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(serviceProvider)
     );
 
