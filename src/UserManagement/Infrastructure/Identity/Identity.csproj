@@ -5,19 +5,16 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<RootNamespace>Octopus.Core.Application</RootNamespace>
-		<AssemblyName>Octopus.Core.Application</AssemblyName>
+		<RootNamespace>Octopus.UserManagement.Core.Identity</RootNamespace>
+		<AssemblyName>Octopus.UserManagement.Core.Identity</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<ProjectReference Include="..\Contract\Contract.csproj" />
+		<ProjectReference Include="..\..\Core\Contract\Contract.csproj" />
 	</ItemGroup>
 
 </Project>

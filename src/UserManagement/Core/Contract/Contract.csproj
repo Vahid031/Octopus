@@ -5,8 +5,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<RootNamespace>Octopus.Catalog.Core.Contract</RootNamespace>
-		<AssemblyName>Octopus.Catalog.Core.Contract</AssemblyName>
+		<RootNamespace>Octopus.UserManagement.Core.Contract</RootNamespace>
+		<AssemblyName>Octopus.UserManagement.Core.Contract</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>

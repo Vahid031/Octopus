@@ -18,8 +18,4 @@
 	  <ProjectReference Include="..\..\Core\Contract\Contract.csproj" />
 	</ItemGroup>
 
-
-
-
-
 </Project>

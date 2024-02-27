@@ -5,14 +5,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<RootNamespace>Octopus.Catalog.Core.Application</RootNamespace>
-		<AssemblyName>Octopus.Catalog.Core.Application</AssemblyName>
+		<RootNamespace>Octopus.UserManagement.Core.Application</RootNamespace>
+		<AssemblyName>Octopus.UserManagement.Core.Application</AssemblyName>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\framework\Core\Application\Application.csproj" />
 		<ProjectReference Include="..\Contract\Contract.csproj" />
 	</ItemGroup>
-	
+
 
 </Project>
