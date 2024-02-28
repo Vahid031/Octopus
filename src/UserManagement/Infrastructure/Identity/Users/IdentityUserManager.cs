@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
 using Octopus.UserManagement.Core.Contract.Users.Commands.Register;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
@@ -11,10 +12,12 @@ namespace Octopus.UserManagement.Core.Identity.Users;
 internal class IdentityUserManager : IUserManager
 {
     private readonly UserManager<OctopusIdentityUser> _userManager;
+    private readonly IMapper _mapper;
 
-    public IdentityUserManager(UserManager<OctopusIdentityUser> userManager)
+    public IdentityUserManager(UserManager<OctopusIdentityUser> userManager, IMapper mapper)
     {
         _userManager = userManager;
+        _mapper = mapper;
     }
 
     public async Task<ApplicationUserModel> FindByUserName(string username)
@@ -23,17 +26,27 @@ internal class IdentityUserManager : IUserManager
 
         if (user == null) return null;
 
-        return 
+        return _mapper.Map<ApplicationUserModel>(user);
     }
 
-    public Task<ApplicationUserModel> FindById(string userId)
+    public async Task<ApplicationUserModel> FindById(string userId)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null) return null;
+
+        return _mapper.Map<ApplicationUserModel>(user);
     }
 
-    public Task Create(RegisterCommand request)
+    public async Task Create(RegisterCommand request)
     {
-        throw new NotImplementedException();
+        var userModel = _mapper.Map<OctopusIdentityUser>(request);
+
+        var result = await _userManager.CreateAsync(userModel, request.Password);
+
+        if (result.Succeeded) return;
+
+        throw new Exception()
     }
 
     public Task Confirm(string userId)
