@@ -22,6 +22,7 @@
 		<ProjectReference Include="..\Catalog\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\Catalog\Presentation\Http\Http.csproj" />
 		<ProjectReference Include="..\UserManagement\Infrastructure\Identity\Identity.csproj" />
+		<ProjectReference Include="..\UserManagement\Presentation\Http\Http.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

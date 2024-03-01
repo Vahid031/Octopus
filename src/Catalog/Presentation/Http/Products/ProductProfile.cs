@@ -3,9 +3,9 @@ using Octopus.Catalog.Core.Contract.Products.Models;
 
 namespace Octopus.Catalog.Presentation.Http.Products;
 
-public class ProductProfile : Profile
+public class ProductMappingProfile : Profile
 {
-	public ProductProfile()
+	public ProductMappingProfile()
 	{
 		CreateMap<ProductItemDto, ProductItemResponse>();
 	}

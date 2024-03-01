@@ -29,7 +29,7 @@ public class OctopusExceptionHandlerMiddleware : IMiddleware
         //    LogDistributedTracing(exp);
         //    await WriteResponse(exp, context, "entity.not.found", HttpStatusCode.NotFound, message: exp.Message);
         //}
-        catch (DomainException exp)
+        catch (OctopusDomainException exp)
         {
             LogDistributedTracing(exp);
             await WriteResponse(exp, context, "", HttpStatusCode.BadRequest, message: exp.Message);

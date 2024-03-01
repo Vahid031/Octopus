@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
+using Octopus.UserManagement.Core.Contract.Users.Models;
 using Octopus.UserManagement.Core.Contract.Users.Services;
 
 namespace Octopus.UserManagement.Core.Application.Users.Commands.SignInWithPassword;
 
-internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPasswordCommand>
+internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPasswordCommand, SignInModel>
 {
     private readonly IUserManager _userManager;
 
@@ -13,9 +14,8 @@ internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPass
         _userManager = userManager;
     }
 
-    public async Task Handle(SignInWithPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<SignInModel> Handle(SignInWithPasswordCommand request, CancellationToken cancellationToken)
     {
-        // ToDo: return token
-        var result = await _userManager.SignInWithPassword(request);
+        return await _userManager.SignInWithPassword(request);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Octopus.Catalog.Core.Application;
+﻿using Octopus.Catalog.Core.Application;
 using Octopus.Catalog.Core.Domain;
 using Octopus.Catalog.Core.Mongo;
 using Octopus.Catalog.Presentation.Http;
@@ -25,7 +24,9 @@ public class Startup
         services
             .AddMongoServices(_configuration)
             .AddHttpServices()
+            //user management
             .AddUserManagementIdentityServices()
+            .AddUserManagementHttpServices()
             //catalog
             .AddCatalogDomainServices()
             .AddCatalogApplicationServices()
@@ -121,8 +122,8 @@ public class Startup
 
         app.UseRouting();
 
-        //app.UseSwagger();
-        //app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -132,13 +133,7 @@ public class Startup
             routeBuilder.MapGet("/__about/version", () => AppInfo.ServiceVersion);
             //routeBuilder.MapNautilusHealthChecks();
             //routeBuilder.MapMetrics();
-            routeBuilder.MapIdentityApi<IdentityUser>();
             routeBuilder.MapControllers();
-
-            routeBuilder.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
-            {
-                await signInManager.SignOutAsync().ConfigureAwait(false);
-            }).RequireAuthorization(); // So that only authorized users can use this endpoint
         });
 
         logger.LogInformation($"App '{AppInfo.ServiceName}' started");
