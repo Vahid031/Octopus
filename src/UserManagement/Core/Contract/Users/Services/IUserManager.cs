@@ -1,5 +1,6 @@
 ﻿using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
 using Octopus.UserManagement.Core.Contract.Users.Commands.Register;
+using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
 using Octopus.UserManagement.Core.Contract.Users.Models;
 
@@ -12,6 +13,8 @@ public interface IUserManager
     Task Create(RegisterCommand request);
     Task Confirm(string userId);
     Task SignOut(string userId);
-    Task SignIn(SignInWithPasswordCommand request);
+    Task<SignInModel> SignInWithPassword(SignInWithPasswordCommand request);
     Task ChangePassword(ChangePasswordCommand request);
+    Task<string> CreateOtpCode(string username);
+    Task<SignInModel> SignInWithOtp(SignInWithOtpCommand request);
 }

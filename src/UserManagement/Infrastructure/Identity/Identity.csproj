@@ -14,7 +14,10 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
 		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
 	</ItemGroup>
 
 	<ItemGroup>

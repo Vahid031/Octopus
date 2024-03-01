@@ -18,5 +18,7 @@
 		<PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
 		<PackageReference Update="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />
 		<PackageReference Update="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
+		<PackageReference Update="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
+		<PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
 	</ItemGroup>
 </Project>
