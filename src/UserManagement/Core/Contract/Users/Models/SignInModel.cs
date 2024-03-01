@@ -2,10 +2,8 @@
 
 public record SignInModel
 {
-    public string Id { get; init; }
-    public string UserName { get; init; }
-    public string PhoneNumber { get; init; }
-    public List<string> Roles { get; init; }
+    public string TokenType { get; init; }
+    public long ExpireIn { get; init; }
     public string AccessToken { get; init; }
     public string RefreshToken { get; init; }
 }

@@ -1,10 +1,14 @@
 ﻿using Octopus.Catalog.Core.Application;
 using Octopus.Catalog.Core.Domain;
 using Octopus.Catalog.Core.Mongo;
+using Octopus.UserManagement.Core.Application;
+using Octopus.UserManagement.Core.Mongo;
 using Octopus.Catalog.Presentation.Http;
 using Octopus.Host.Middlewares;
 using Octopus.Presentation.Http;
 using Octopus.UserManagement.Core.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace Octopus.Host;
 
@@ -25,8 +29,10 @@ public class Startup
             .AddMongoServices(_configuration)
             .AddHttpServices()
             //user management
-            .AddUserManagementIdentityServices()
+            .AddUserManagementIdentityServices(_configuration)
+            .AddUserManagmentApplicationServices()
             .AddUserManagementHttpServices()
+            .AddUserManagementMongoServices()
             //catalog
             .AddCatalogDomainServices()
             .AddCatalogApplicationServices()
@@ -34,7 +40,28 @@ public class Startup
             .AddCatalogHttpServices();
 
 
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c =>
+        {
+            var securitySchema = new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                BearerFormat = "JWT",
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
+            };
+            c.AddSecurityDefinition(securitySchema.Reference.Id, securitySchema);
+
+            var securityRequirement = new OpenApiSecurityRequirement();
+            securityRequirement.Add(securitySchema, Array.Empty<string>());
+            c.AddSecurityRequirement(securityRequirement);
+        });
 
         //services.AddAutoMapper(cfg => { cfg.ShouldUseConstructor = constructor => constructor.IsPublic; },
         //    typeof(Squidward.Application.AssemblyPointer).Assembly, typeof(AssemblyPointer).Assembly);

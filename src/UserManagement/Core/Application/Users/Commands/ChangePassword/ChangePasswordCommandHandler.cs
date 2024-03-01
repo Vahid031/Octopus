@@ -1,26 +1,33 @@
-﻿using MediatR;
-using Octopus.Core.Contract.Exceptions;
-using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
-using Octopus.UserManagement.Core.Contract.Users.Services;
+﻿//using MediatR;
+//using Octopus.Core.Contract.Exceptions;
+//using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+//using Octopus.UserManagement.Core.Contract.Users.Services;
+//using Octopus.UserManagement.Core.Domain.Users.Services;
 
-namespace Octopus.UserManagement.Core.Application.Users.Commands.ChangePassword;
+//namespace Octopus.UserManagement.Core.Application.Users.Commands.ChangePassword;
 
-internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
-{
-    private readonly IUserManager _userManager;
+//internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
+//{
+//    private readonly IAuthenticationManager _authenticationManager;
+//    private readonly IUserRepository _userRepository;
 
-    public ChangePasswordCommandHandler(IUserManager userManager)
-    {
-        _userManager = userManager;
-    }
+//    public ChangePasswordCommandHandler(IAuthenticationManager authenticationManager,
+//        IUserRepository userRepository)
+//    {
+//        _authenticationManager = authenticationManager;
+//        _userRepository = userRepository;
+//    }
 
-    public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
-    {
-        var user = _userManager.FindById(request.UserId);
+//    public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+//    {
 
-        if (user is null)
-            throw new OctopusException("User not found, userId: {userId}", request.UserId);
+//        var user = _userRepository.GetByPhoneNumber(request.)
 
-        await _userManager.ChangePassword(request);
-    }
-}
+//        var user = _userManager.FindById(request.UserId);
+
+//        if (user is null)
+//            throw new OctopusException("User not found, userId: {userId}", request.UserId);
+
+//        await _userManager.ChangePassword(request);
+//    }
+//}

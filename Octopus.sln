@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Http", "src\UserManagement\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "src\UserManagement\Infrastructure\Identity\Identity.csproj", "{22750BA6-F04D-4270-9AAE-0E3842ADD876}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mongo", "src\UserManagement\Infrastructure\Mongo\Mongo.csproj", "{9659EE47-8A6E-4139-B06E-33E3F54E6880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,10 @@ Global
 		{22750BA6-F04D-4270-9AAE-0E3842ADD876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22750BA6-F04D-4270-9AAE-0E3842ADD876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22750BA6-F04D-4270-9AAE-0E3842ADD876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9659EE47-8A6E-4139-B06E-33E3F54E6880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9659EE47-8A6E-4139-B06E-33E3F54E6880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9659EE47-8A6E-4139-B06E-33E3F54E6880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9659EE47-8A6E-4139-B06E-33E3F54E6880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{093D3872-610B-488A-AD36-61E17F920F3F} = {2D931110-146F-4FB2-ADE3-AD6AFDAD6922}
 		{53660CD2-EF10-4783-AC72-5B9386488815} = {093D3872-610B-488A-AD36-61E17F920F3F}
 		{22750BA6-F04D-4270-9AAE-0E3842ADD876} = {5DA13F6F-D1BB-4347-82E5-44F837CBC1A4}
+		{9659EE47-8A6E-4139-B06E-33E3F54E6880} = {5DA13F6F-D1BB-4347-82E5-44F837CBC1A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE275B7D-1DB8-409D-A788-FB2EAAA1D917}

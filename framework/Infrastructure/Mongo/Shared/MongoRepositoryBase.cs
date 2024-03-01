@@ -11,7 +11,7 @@ public abstract class MongoRepositoryBase<TAggregate, TId>
     where TId : IIdBase
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMongoCollection<TAggregate> _collection;
+    protected readonly IMongoCollection<TAggregate> _collection;
 
     public MongoRepositoryBase(IUnitOfWork unitOfWork,
         IMongoCollection<TAggregate> collection)

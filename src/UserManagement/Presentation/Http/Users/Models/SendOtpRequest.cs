@@ -1,7 +1,6 @@
 ﻿namespace Octopus.UserManagement.Presentation.Http.Users.Models;
 
-public record SignInWithPasswordRequest
+public record SendOtpRequest
 {
     public string Username { get; init; }
-    public string Password { get; init; }
 }

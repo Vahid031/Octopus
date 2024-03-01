@@ -1,59 +1,97 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Octopus.Presentation.Http.EnvelopModels;
+using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
-using Octopus.UserManagement.Core.Contract.Users.Commands.SignOut;
 using Octopus.UserManagement.Presentation.Http.Users.Models;
-using System.Security.Claims;
 
 namespace Octopus.UserManagement.Presentation.Http.Users;
 
 [ApiController]
-[Route("api/catalog/users")]
-public class UserController(IMediator mediator, IMapper mapper) : ControllerBase
+[Route("api/user-management/users")]
+[Produces("application/json")]
+[Consumes("application/json")]
+public class UserController : ControllerBase
 {
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    [HttpPost("signin")]
-    public async Task<ActionResult<SignInResponse>> SignInWithPassword([FromBody] SignInWithPasswordRequest request)
+    public UserController(IMediator mediator, IMapper mapper)
     {
-        //var command = new SignInWithPasswordCommand()
-        //{
-        //    IpAddress = "127.0.0.1",
-        //    Password = request.Password,
-        //    UserName = request.UserName,
-        //};
-        //var result = await mediator.Send(command);
-
-        var claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, "Vahid", ClaimValueTypes.String)
-            };
-        var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, "", "");
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(userIdentity),
-            new AuthenticationProperties
-            {
-                ExpiresUtc = DateTime.UtcNow.AddHours(10),
-                IsPersistent = true,
-                AllowRefresh = true
-            });
-
-        return NoContent();
-
-        //return mapper.Map<SignInResponse>(result);
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
-    [HttpPost("signout")]
-    public new async Task<ActionResult> SignOut()
+    [ProducesResponseType(typeof(SuccessEnvelop<SignInResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPost("password/sign-in")]
+    public async Task<ActionResult<SignInResponse>> SignInWithPassword([FromBody] SignInWithPasswordRequest request)
     {
-        //var command = new SignOutCommand
-        //{
-        //    UserId = ""
-        //};
-        //await mediator.Send(command);
+        var command = new SignInWithPasswordCommand
+        {
+            IpAddress = "127.0.0.1",
+            Password = request.Password,
+            Username = request.Username,
+        };
+        var result = await _mediator.Send(command);
 
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return _mapper.Map<SignInResponse>(result);
+    }
+
+    [ProducesResponseType(typeof(SuccessEnvelop<SignInResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPost("otp/sign-in")]
+    public async Task<ActionResult<SignInResponse>> SignInWithOtp([FromBody] SignInWithOtpRequest request)
+    {
+        var command = new SignInWithOtpCommand
+        {
+            IpAddress = "127.0.0.1",
+            Code = request.Code,
+            Username = request.Username,
+        };
+        var result = await _mediator.Send(command);
+
+        return _mapper.Map<SignInResponse>(result);
+    }
+
+    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPut("password/change")]
+    [Authorize]
+    public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var command = new ChangePasswordCommand
+        {
+
+        };
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPut("password/set")]
+    [Authorize]
+    public async Task<ActionResult> SetPassword([FromBody] SetPasswordRequest request)
+    {
+        var command = new ChangePasswordCommand
+        {
+
+        };
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPost("otp/send")]
+    public async Task<ActionResult> SendOtp([FromBody] SendOtpRequest request)
+    {
 
 
         return NoContent();
