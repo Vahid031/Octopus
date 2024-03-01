@@ -1,4 +1,8 @@
-﻿namespace Octopus.Catalog.Presentation.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+namespace Octopus.Catalog.Presentation.Http;
 
 public static class ServiceCollectionExtension
 {
