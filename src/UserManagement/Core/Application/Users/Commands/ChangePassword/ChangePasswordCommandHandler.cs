@@ -1,33 +1,36 @@
-﻿//using MediatR;
-//using Octopus.Core.Contract.Exceptions;
-//using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
-//using Octopus.UserManagement.Core.Contract.Users.Services;
-//using Octopus.UserManagement.Core.Domain.Users.Services;
+﻿using MediatR;
+using Octopus.Core.Contract.Exceptions;
+using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+using Octopus.UserManagement.Core.Domain.Users.Services;
 
-//namespace Octopus.UserManagement.Core.Application.Users.Commands.ChangePassword;
+namespace Octopus.UserManagement.Core.Application.Users.Commands.ChangePassword;
 
-//internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
-//{
-//    private readonly IAuthenticationManager _authenticationManager;
-//    private readonly IUserRepository _userRepository;
+internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
+{
+    private readonly IPasswordDomainService _passwordDomainService;
+    private readonly IUserRepository _userRepository;
 
-//    public ChangePasswordCommandHandler(IAuthenticationManager authenticationManager,
-//        IUserRepository userRepository)
-//    {
-//        _authenticationManager = authenticationManager;
-//        _userRepository = userRepository;
-//    }
+    public ChangePasswordCommandHandler(IPasswordDomainService passwordDomainService,
+        IUserRepository userRepository)
+    {
+        _passwordDomainService = passwordDomainService;
+        _userRepository = userRepository;
+    }
 
-//    public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
-//    {
+    public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    {
 
-//        var user = _userRepository.GetByPhoneNumber(request.)
+        var user = await _userRepository.GetById(request.UserId);
 
-//        var user = _userManager.FindById(request.UserId);
+        if (user is null)
+        {
+            // ToDo: log
+            throw new OctopusException("User not found, userId: {userId}", request.UserId.ToString());
+        }
 
-//        if (user is null)
-//            throw new OctopusException("User not found, userId: {userId}", request.UserId);
+        user.ChangePassword(_passwordDomainService, request.OldPassword, request.NewPassword);
 
-//        await _userManager.ChangePassword(request);
-//    }
-//}
+        await _userRepository.Update(user);
+        await _userRepository.Commit();
+    }
+}

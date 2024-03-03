@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
@@ -65,7 +66,9 @@ public class UserController : ControllerBase
     {
         var command = new ChangePasswordCommand
         {
-
+            OldPassword = request.OldPassword,
+            NewPassword = request.NewPassword,
+            UserId = HttpContext.GetUserId()
         };
         await _mediator.Send(command);
 

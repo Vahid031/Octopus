@@ -1,14 +1,16 @@
-﻿using Octopus.Catalog.Core.Application;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using Octopus.Catalog.Core.Application;
 using Octopus.Catalog.Core.Domain;
 using Octopus.Catalog.Core.Mongo;
-using Octopus.UserManagement.Core.Application;
-using Octopus.UserManagement.Core.Mongo;
 using Octopus.Catalog.Presentation.Http;
-using Octopus.Host.Middlewares;
+using Octopus.Host.MiddleWares;
+using Octopus.Infrastructure.Notification;
 using Octopus.Presentation.Http;
-using Octopus.UserManagement.Core.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Octopus.UserManagement.Core.Application;
+using Octopus.UserManagement.Core.Domain;
+using Octopus.UserManagement.Core.Mongo;
+using Octopus.UserManagement.Presentation.Http;
 
 namespace Octopus.Host;
 
@@ -28,11 +30,12 @@ public class Startup
         services
             .AddMongoServices(_configuration)
             .AddHttpServices()
+            .AddNotificationServices(_configuration)
             //user management
-            .AddUserManagementIdentityServices(_configuration)
-            .AddUserManagmentApplicationServices()
-            .AddUserManagementHttpServices()
+            .AddUserManagementApplicationServices()
+            .AddUserManagementHttpServices(_configuration)
             .AddUserManagementMongoServices()
+            .AddUserManagementDomainServices()
             //catalog
             .AddCatalogDomainServices()
             .AddCatalogApplicationServices()

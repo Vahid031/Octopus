@@ -1,10 +1,10 @@
 ﻿using MongoDB.Driver;
+using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Shared;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
-using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
-namespace Octopus.Catalog.Core.Mongo.Products;
+namespace Octopus.UserManagement.Core.Mongo.Users;
 
 internal class MongoUserRepository : MongoRepositoryBase<User, UserId>, IUserRepository
 {
@@ -14,7 +14,7 @@ internal class MongoUserRepository : MongoRepositoryBase<User, UserId>, IUserRep
     {
     }
 
-    public Task<User> GetByPhoneNumber(string phoneNumber) =>
-        _collection.Find(x => x.PhoneNumber.Equals(phoneNumber)).SingleOrDefaultAsync();
+    public Task<User> GetByUsername(string username) =>
+        _collection.Find(x => x.Username.Equals(username)).SingleOrDefaultAsync();
 
 }

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Octopus.UserManagement.Core.Contract.Users.Models;
+using Octopus.UserManagement.Core.Domain.Users.Models;
 
 namespace Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
 
-public record SignInWithPasswordCommand : IRequest<SignInModel>
+public record SignInWithPasswordCommand : IRequest<TokenModel>
 {
     public string Username { get; init; }
     public string IpAddress { get; init; }

@@ -1,65 +1,41 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
-using Octopus.UserManagement.Core.Contract.Users.Models;
-using Octopus.UserManagement.Core.Contract.Users.Services;
-using Octopus.UserManagement.Core.Domain.Users.Entities;
+using Octopus.UserManagement.Core.Domain.Users.Models;
 using Octopus.UserManagement.Core.Domain.Users.Services;
-using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
 namespace Octopus.UserManagement.Core.Application.Users.Commands.SignInWithPassword;
 
-internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPasswordCommand, SignInModel>
+internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPasswordCommand, TokenModel>
 {
-    private readonly IAuthenticationManager _authenticationManager;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<SignInWithPasswordCommandHandler> _logger;
+    private readonly IUserTokenGenerator _userTokenGenerator;
+    private readonly IPasswordDomainService _passwordDomainService;
 
-    public SignInWithPasswordCommandHandler(IAuthenticationManager authenticationManager,
+    public SignInWithPasswordCommandHandler(
         IUserRepository userRepository,
-        ILogger<SignInWithPasswordCommandHandler> logger)
+        ILogger<SignInWithPasswordCommandHandler> logger,
+        IUserTokenGenerator userTokenGenerator,
+        IPasswordDomainService passwordDomainService)
     {
-        _authenticationManager = authenticationManager;
         _userRepository = userRepository;
         _logger = logger;
+        _userTokenGenerator = userTokenGenerator;
+        _passwordDomainService = passwordDomainService;
     }
 
-    public async Task<SignInModel> Handle(SignInWithPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<TokenModel> Handle(SignInWithPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByPhoneNumber(request.Username);
+        var user = await _userRepository.GetByUsername(request.Username);
 
         if (user == null)
         {
-            user = new User
-            {
-                FirstName = "Vahid",
-                PhoneNumber = "09212681463",
-                LastName = "Goodarzi",
-                OtpCodes = new(),
-                RefreshTokens = new(),
-                Id = UserId.New()
-            };
-
-            await _userRepository.Insert(user);
-            await _userRepository.Commit();
+            // ToDo: log and throw
+            throw new Exception();
         }
 
-
-
-
-        var signInUserModel = new SignInUserModel
-        {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber,
-            UserId = user.Id.ToString(),
-            Roles = new string[] { "", "" }.ToList(),
-        };
-
-        var result = await _authenticationManager.SignIn(signInUserModel);
-
-        //ToDo: persist result
-
-        return result;
+        return user.SignInWithPassword(_userTokenGenerator, 
+            _passwordDomainService, request.Password, request.IpAddress);
     }
 }

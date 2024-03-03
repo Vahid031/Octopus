@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
+using Octopus.Core.Domain.ValueObjects;
 
 namespace Octopus.UserManagement.Core.Mongo.Users;
 internal class UserIdBsonSerializer : IBsonSerializer<UserId>

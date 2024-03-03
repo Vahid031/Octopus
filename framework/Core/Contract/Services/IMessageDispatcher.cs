@@ -2,7 +2,7 @@
 
 namespace Octopus.Core.Contract.Services;
 
-public interface IMessageDispacher
+public interface IMessageDispatcher
 {
     Task Raise(IntegrationEvent @event);
 }

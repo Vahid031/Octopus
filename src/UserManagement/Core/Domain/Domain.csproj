@@ -13,4 +13,8 @@
 		<ProjectReference Include="..\..\..\..\framework\Core\Domain\Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Users\ValueObjects\" />
+	</ItemGroup>
+
 </Project>

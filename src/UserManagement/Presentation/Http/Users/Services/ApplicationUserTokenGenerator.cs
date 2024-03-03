@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Octopus.UserManagement.Core.Contract.Users.Models;
-using Octopus.UserManagement.Core.Contract.Users.Services;
-using Octopus.UserManagement.Core.Identity.Users.Models;
+using Octopus.UserManagement.Core.Domain.Users.Entities;
+using Octopus.UserManagement.Core.Domain.Users.Models;
+using Octopus.UserManagement.Core.Domain.Users.Services;
+using Octopus.UserManagement.Presentation.Http.Configurations.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Sockets;
@@ -14,28 +12,25 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Octopus.UserManagement.Core.Identity.Users;
+namespace Octopus.UserManagement.Presentation.Http.Users.Services;
 
-internal class IdentityAuthenticationManager : IAuthenticationManager
+internal class ApplicationUserTokenGenerator : IUserTokenGenerator
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public IdentityAuthenticationManager(
-        IOptions<JwtOptions> jwtOptions,
-        IHttpContextAccessor httpContextAccessor)
+    public ApplicationUserTokenGenerator(
+        IOptions<JwtOptions> jwtOptions)
     {
         _jwtOptions = jwtOptions;
-        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<SignInModel> SignIn(SignInUserModel user)
+    public TokenModel GenerateToken(User user)
     {
         var roleClaims = new List<Claim>();
 
         for (int i = 0; i < user.Roles.Count; i++)
         {
-            roleClaims.Add(new Claim("roles", user.Roles[i]));
+            roleClaims.Add(new Claim("roles", user.Roles[i].ToString()));
         }
 
         string ipAddress = GetHostIpAddress();
@@ -45,40 +40,32 @@ internal class IdentityAuthenticationManager : IAuthenticationManager
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
-                new Claim("uid", user.UserId),
+                new Claim("uid", user.Id.ToString()),
                 new Claim("ip", ipAddress)
             }
         .Union(roleClaims);
 
         var expireIn = DateTime.UtcNow.Add(_jwtOptions.Value.TokenDuration);
 
-        var userIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme, "", "");
-
-        //await _httpContextAccessor.HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme,
-        //     new ClaimsPrincipal(userIdentity),
-        //     new AuthenticationProperties
-        //     {
-        //         ExpiresUtc = expireIn,
-        //         IsPersistent = true,
-        //         AllowRefresh = true
-        //     });
-
-        return GenerateSignInModel(expireIn, claims.ToArray());
+        return GenerateSignInModel(expireIn, ipAddress, claims.ToArray());
     }
-    private SignInModel GenerateSignInModel(DateTime expireIn, Claim[] claims)
-    {
-        JwtSecurityToken jwtSecurityToken = GenerateJsonWebToken(expireIn, claims);
 
-        return new SignInModel
+    private TokenModel GenerateSignInModel(DateTime expires, string ipAddress, Claim[] claims)
+    {
+        JwtSecurityToken jwtSecurityToken = GenerateJsonWebToken(expires, claims);
+
+        return new TokenModel
         {
             AccessToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
             TokenType = JwtBearerDefaults.AuthenticationScheme,
-            ExpireIn = expireIn.Ticks,
             RefreshToken = RandomTokenString(),
+            RefreshTokenExpires = DateTimeOffset.UtcNow.Add(_jwtOptions.Value.RefreshTokenDuration),
+            IpAddress = ipAddress,
+            AccessTokenExpires = expires
         };
     }
 
-    private JwtSecurityToken GenerateJsonWebToken(DateTime expireIn, Claim[] claims)
+    private JwtSecurityToken GenerateJsonWebToken(DateTime expires, Claim[] claims)
     {
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Key));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -87,7 +74,7 @@ internal class IdentityAuthenticationManager : IAuthenticationManager
         issuer: _jwtOptions.Value.Issuer,
         audience: _jwtOptions.Value.Audience,
         claims: claims,
-        expires: expireIn,
+        expires: expires,
         signingCredentials: signingCredentials);
         return jwtSecurityToken;
     }
@@ -112,11 +99,5 @@ internal class IdentityAuthenticationManager : IAuthenticationManager
             }
         }
         return string.Empty;
-    }
-
-    public async Task SignOut()
-    {
-        await _httpContextAccessor.HttpContext.SignOutAsync(
-            JwtBearerDefaults.AuthenticationScheme);
     }
 }

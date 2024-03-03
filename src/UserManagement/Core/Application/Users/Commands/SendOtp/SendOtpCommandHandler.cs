@@ -1,42 +1,50 @@
-﻿//using MediatR;
-//using Microsoft.Extensions.Logging;
-//using Octopus.Core.Application.Events;
-//using Octopus.Core.Contract.Exceptions;
-//using Octopus.Core.Contract.Services;
-//using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
-//using Octopus.UserManagement.Core.Contract.Users.Services;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Octopus.Core.Application.Events;
+using Octopus.Core.Contract.Exceptions;
+using Octopus.Core.Contract.Services;
+using Octopus.UserManagement.Core.Application.Configurations.Options;
+using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
+using Octopus.UserManagement.Core.Domain.Users.Services;
 
-//namespace Octopus.UserManagement.Core.Application.Users.Commands.SendOtp;
+namespace Octopus.UserManagement.Core.Application.Users.Commands.SendOtp;
 
-//public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
-//{
-//    private readonly IAuthenticationManager _userManager;
-//    private readonly ILogger<SendOtpCommandHandler> _logger;
-//    private readonly IMessageDispacher _messageDispacher;
+public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
+{
+    private readonly IUserRepository _userRepository;
+    private readonly ILogger<SendOtpCommandHandler> _logger;
+    private readonly IMessageDispatcher _messageDispatcher;
+    private readonly IOptions<OtpOptions> _otpOptions;
 
-//    public SendOtpCommandHandler(IAuthenticationManager userManager, ILogger<SendOtpCommandHandler> logger, IMessageDispacher messageDispacher)
-//    {
-//        _userManager = userManager;
-//        _logger = logger;
-//        _messageDispacher = messageDispacher;
-//    }
+    public SendOtpCommandHandler(IUserRepository userRepository, 
+        ILogger<SendOtpCommandHandler> logger, 
+        IMessageDispatcher messageDispatcher,
+        IOptions<OtpOptions> otpOptions)
+    {
+        _userRepository = userRepository;
+        _logger = logger;
+        _messageDispatcher = messageDispatcher;
+        _otpOptions = otpOptions;
+    }
 
-//    public async Task Handle(SendOtpCommand request, CancellationToken cancellationToken)
-//    {
-//        var user = await _userManager.FindByUserName(request.UserName);
+    public async Task Handle(SendOtpCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByUsername(request.UserName);
 
-//        if (user == null)
-//        {
-//            _logger.LogError("UserName:'{username}' not found", request.UserName);
-//            throw new OctopusException("UserName:'{username}' not found", request.UserName);
-//        }
+        if (user == null)
+        {
+            _logger.LogError("UserName:'{username}' not found", request.UserName);
+            throw new OctopusException("UserName:'{username}' not found", request.UserName);
+        }
 
-//        var code = await _userManager.CreateOtpCode(user.UserName);
+        var code = user.CreateNewOtpCode(request.IpAddress, _otpOptions.Value.ExpireDuration);
 
-//        var message = string.Format(@"Your code : {code}", code);
+        
+        // ToDo: Replace magic word with const
+        var message = $"Your code : {code}";
+        var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber);
 
-//        var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber);
-
-//        await _messageDispacher.Raise(@event);
-//    }
-//}
+        await _messageDispatcher.Raise(@event);
+    }
+}

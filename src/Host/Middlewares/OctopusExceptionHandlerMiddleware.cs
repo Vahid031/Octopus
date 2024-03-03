@@ -1,8 +1,10 @@
-﻿using Octopus.Core.Domain.Exceptions;
+﻿using Octopus.Core.Contract.Exceptions;
+using Octopus.Core.Domain.Exceptions;
+using Octopus.Presentation.Http.EnvelopModels;
 using System.Diagnostics;
 using System.Net;
 
-namespace Octopus.Host.Middlewares;
+namespace Octopus.Host.MiddleWares;
 
 public class OctopusExceptionHandlerMiddleware : IMiddleware
 {
@@ -19,17 +21,12 @@ public class OctopusExceptionHandlerMiddleware : IMiddleware
         {
             await next(context);
         }
-        //catch (SquidwardNotAuthorizedException exp)
-        //{
-        //    LogDistributedTracing(exp);
-        //    await WriteResponse(exp, context, "unauthorized", HttpStatusCode.Unauthorized, message: exp.Message);
-        //}
-        //catch (SquidwardEntityNotFoundException exp)
-        //{
-        //    LogDistributedTracing(exp);
-        //    await WriteResponse(exp, context, "entity.not.found", HttpStatusCode.NotFound, message: exp.Message);
-        //}
         catch (OctopusDomainException exp)
+        {
+            LogDistributedTracing(exp);
+            await WriteResponseAndLogError(exp, context, "", HttpStatusCode.BadRequest, message: exp.Message);
+        }
+        catch (OctopusException exp)
         {
             LogDistributedTracing(exp);
             await WriteResponse(exp, context, "", HttpStatusCode.BadRequest, message: exp.Message);
@@ -79,11 +76,11 @@ public class OctopusExceptionHandlerMiddleware : IMiddleware
             //exception.Data.TryAdd("request_path", $"{context.Request.Path}");
             //exception.Data.TryAdd("request_query_string", decodedQueryString);
 
-            //var response = new FailureEnvelop(new[]
-            //{
-            //    EnvelopError.Create(code: errorKey, message: message ?? "Oops, something went wrong")
-            //});
-            //await context.Response.WriteAsJsonAsync(response);
+            var response = new FailureEnvelop(new[]
+            {
+                EnvelopError.Create(code: errorKey, message: message ?? "Oops, something went wrong")
+            });
+            await context.Response.WriteAsJsonAsync(response);
         }
         catch (Exception ex)
         {

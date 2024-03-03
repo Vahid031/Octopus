@@ -18,11 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\framework\Infrastructure\Notification\Notification.csproj" />
 		<ProjectReference Include="..\Catalog\Core\Application\Application.csproj" />
 		<ProjectReference Include="..\Catalog\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\Catalog\Presentation\Http\Http.csproj" />
 		<ProjectReference Include="..\UserManagement\Core\Application\Application.csproj" />
-		<ProjectReference Include="..\UserManagement\Infrastructure\Identity\Identity.csproj" />
 		<ProjectReference Include="..\UserManagement\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\UserManagement\Presentation\Http\Http.csproj" />
 	</ItemGroup>

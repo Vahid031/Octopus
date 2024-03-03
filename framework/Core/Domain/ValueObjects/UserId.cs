@@ -1,6 +1,4 @@
-﻿using Octopus.Core.Domain.ValueObjects;
-
-namespace Octopus.UserManagement.Core.Domain.Users.ValueObjects;
+﻿namespace Octopus.Core.Domain.ValueObjects;
 
 public class UserId : IdBase<Guid>
 {
