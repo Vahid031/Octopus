@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using Octopus.Infrastructure.Mongo.Configurations;
 using Octopus.Infrastructure.Mongo.Shared;
 
-namespace Octopus.Presentation.Http;
+namespace Octopus.Infrastructure.Mongo;
 
 public static class ServiceCollectionExtension
 {

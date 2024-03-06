@@ -35,7 +35,7 @@ public class UserController : ControllerBase
         {
             IpAddress = "127.0.0.1",
             Password = request.Password,
-            Username = request.Username,
+            UserName = request.UserName,
         };
         var result = await _mediator.Send(command);
 
@@ -51,7 +51,7 @@ public class UserController : ControllerBase
         {
             IpAddress = "127.0.0.1",
             Code = request.Code,
-            Username = request.Username,
+            UserName = request.UserName,
         };
         var result = await _mediator.Send(command);
 

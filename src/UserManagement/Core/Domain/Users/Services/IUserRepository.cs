@@ -6,5 +6,5 @@ namespace Octopus.UserManagement.Core.Domain.Users.Services;
 
 public interface IUserRepository : IRepository<User, UserId>
 {
-    Task<User> GetByUsername(string username);
+    Task<User> GetByUserName(string userName);
 }

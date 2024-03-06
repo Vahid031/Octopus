@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Octopus.Core.Contract.Exceptions;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
 using Octopus.UserManagement.Core.Domain.Users.Models;
 using Octopus.UserManagement.Core.Domain.Users.Services;
@@ -27,15 +28,15 @@ internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPass
 
     public async Task<TokenModel> Handle(SignInWithPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByUsername(request.Username);
+        var user = await _userRepository.GetByUserName(request.UserName);
 
         if (user == null)
         {
-            // ToDo: log and throw
-            throw new Exception();
+            _logger.LogError("UserName:'{userName}' not found", request.UserName);
+            throw new OctopusException("", request.UserName);
         }
 
-        return user.SignInWithPassword(_userTokenGenerator, 
+        return user.SignInWithPassword(_userTokenGenerator,
             _passwordDomainService, request.Password, request.IpAddress);
     }
 }

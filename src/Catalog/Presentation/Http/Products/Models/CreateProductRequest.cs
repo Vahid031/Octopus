@@ -1,4 +1,4 @@
-﻿namespace Octopus.Catalog.Presentation.Http.Products;
+﻿namespace Octopus.Catalog.Presentation.Http.Products.Models;
 
 public record CreateProductRequest
 {

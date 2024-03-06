@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Octopus.Catalog.Core.Contract.Products.Notifications;
 
-namespace Octopus.Catalog.Core.Application.Products.Events;
+namespace Octopus.Catalog.Core.Application.Products.Notifications;
 
 internal class ProductCreatedNotificationHandler : INotificationHandler<ProductCreatedNotification>
 {

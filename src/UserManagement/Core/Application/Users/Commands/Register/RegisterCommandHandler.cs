@@ -21,15 +21,15 @@ internal class RegisterCommandHandler : IRequestHandler<RegisterCommand>
 
     public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByUsername(request.Username);
+        var user = await _userRepository.GetByUserName(request.UserName);
 
         if (user != null)
         {
-            _logger.LogError("UserName:'{username}' already exists", request.Username);
-            throw new OctopusException("UserName:'{username}' already exists", request.Username);
+            _logger.LogError("UserName:'{userName}' already exists", request.UserName);
+            throw new OctopusException("UserName:'{userName}' already exists", request.UserName);
         }
 
-        user = User.Create(request.Username, request.PhoneNumber, request.FirstName, request.LastName);
+        user = User.Create(request.UserName, request.PhoneNumber, request.FirstName, request.LastName);
 
 
         await _userRepository.Insert(user);

@@ -2,6 +2,6 @@
 
 public record SignInWithPasswordRequest
 {
-    public string Username { get; init; }
+    public string UserName { get; init; }
     public string Password { get; init; }
 }

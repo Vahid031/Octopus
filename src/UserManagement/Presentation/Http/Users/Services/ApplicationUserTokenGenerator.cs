@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Models;
 using Octopus.UserManagement.Core.Domain.Users.Services;
 using Octopus.UserManagement.Presentation.Http.Configurations.Options;
@@ -24,7 +23,7 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
         _jwtOptions = jwtOptions;
     }
 
-    public TokenModel GenerateToken(User user)
+    public TokenModel GenerateToken(GenerateUserTokenInputModel user)
     {
         var roleClaims = new List<Claim>();
 
@@ -35,15 +34,16 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
 
         string ipAddress = GetHostIpAddress();
         var claims = new[]
-        {
+            {
                 new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
                 new Claim("uid", user.Id.ToString()),
                 new Claim("ip", ipAddress)
             }
-        .Union(roleClaims);
+            .Union(roleClaims);
 
         var expireIn = DateTime.UtcNow.Add(_jwtOptions.Value.TokenDuration);
 
@@ -71,11 +71,11 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
         var jwtSecurityToken = new JwtSecurityToken(
-        issuer: _jwtOptions.Value.Issuer,
-        audience: _jwtOptions.Value.Audience,
-        claims: claims,
-        expires: expires,
-        signingCredentials: signingCredentials);
+            issuer: _jwtOptions.Value.Issuer,
+            audience: _jwtOptions.Value.Audience,
+            claims: claims,
+            expires: expires,
+            signingCredentials: signingCredentials);
         return jwtSecurityToken;
     }
 
@@ -98,6 +98,7 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
                 return ip.ToString();
             }
         }
+
         return string.Empty;
     }
 }

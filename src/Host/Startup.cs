@@ -4,7 +4,8 @@ using Octopus.Catalog.Core.Application;
 using Octopus.Catalog.Core.Domain;
 using Octopus.Catalog.Core.Mongo;
 using Octopus.Catalog.Presentation.Http;
-using Octopus.Host.MiddleWares;
+using Octopus.Host.Middlewares;
+using Octopus.Infrastructure.Mongo;
 using Octopus.Infrastructure.Notification;
 using Octopus.Presentation.Http;
 using Octopus.UserManagement.Core.Application;
@@ -32,7 +33,7 @@ public class Startup
             .AddHttpServices()
             .AddNotificationServices(_configuration)
             //user management
-            .AddUserManagementApplicationServices()
+            .AddUserManagementApplicationServices(_configuration)
             .AddUserManagementHttpServices(_configuration)
             .AddUserManagementMongoServices()
             .AddUserManagementDomainServices()

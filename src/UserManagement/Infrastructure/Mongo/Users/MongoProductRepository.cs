@@ -14,7 +14,7 @@ internal class MongoUserRepository : MongoRepositoryBase<User, UserId>, IUserRep
     {
     }
 
-    public Task<User> GetByUsername(string username) =>
-        _collection.Find(x => x.Username.Equals(username)).SingleOrDefaultAsync();
+    public Task<User> GetByUserName(string userName) =>
+        _collection.Find(x => x.UserName.Equals(userName)).SingleOrDefaultAsync();
 
 }

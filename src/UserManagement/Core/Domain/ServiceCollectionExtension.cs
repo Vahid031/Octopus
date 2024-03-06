@@ -7,7 +7,6 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddUserManagementDomainServices(this IServiceCollection services)
     {
-
         services.AddSingleton<IPasswordDomainService, Sha256PasswordDomainService>();
 
         return services;
