@@ -15,6 +15,7 @@
 		<PackageReference Include="Serilog.Settings.Configuration" />
 		<PackageReference Include="Serilog.Sinks.Console" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Serilog.Sinks.Elasticsearch" />
 	</ItemGroup>
 
 	<ItemGroup>
