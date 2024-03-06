@@ -8,7 +8,7 @@ internal class MockUserRepository : IUserRepository
 {
     private static List<User> _users = new()
     {
-        User.Create("alireaz", "+989124777431", "alireza", "sharifi")
+        User.Create("alireza", "+989124777431", "alireza", "sharifi")
     };
 
     public MockUserRepository()
