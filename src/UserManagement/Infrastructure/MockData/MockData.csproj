@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<RootNamespace>Octopus.UserManagement.Infrastructure.Mock</RootNamespace>
+		<AssemblyName>Octopus.UserManagement.Infrastructure.Mock</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\framework\Infrastructure\Mongo\Mongo.csproj" />
+		<ProjectReference Include="..\..\Core\Contract\Contract.csproj" />
+	</ItemGroup>
+
+</Project>

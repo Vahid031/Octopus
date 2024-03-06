@@ -10,7 +10,7 @@ using Octopus.Infrastructure.Notification;
 using Octopus.Presentation.Http;
 using Octopus.UserManagement.Core.Application;
 using Octopus.UserManagement.Core.Domain;
-using Octopus.UserManagement.Core.Mongo;
+using Octopus.UserManagement.Infrastructure.Mock;
 using Octopus.UserManagement.Presentation.Http;
 
 namespace Octopus.Host;
@@ -35,7 +35,7 @@ public class Startup
             //user management
             .AddUserManagementApplicationServices(_configuration)
             .AddUserManagementHttpServices(_configuration)
-            .AddUserManagementMongoServices()
+            .AddUserManagementMockDataServices()
             .AddUserManagementDomainServices()
             //catalog
             .AddCatalogDomainServices()
