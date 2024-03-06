@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
 using Octopus.UserManagement.Presentation.Http.Users.Models;
@@ -83,8 +84,11 @@ public class UserController : ControllerBase
     {
         var command = new ChangePasswordCommand
         {
-
+            OldPassword = request.ComparePassword,
+            NewPassword = request.NewPassword,
+            UserId = HttpContext.GetUserId()
         };
+
         await _mediator.Send(command);
 
         return NoContent();
@@ -95,7 +99,12 @@ public class UserController : ControllerBase
     [HttpPost("otp/send")]
     public async Task<ActionResult> SendOtp([FromBody] SendOtpRequest request)
     {
-
+        var command = new SendOtpCommand()
+        {
+            UserName = request.UserName,
+            IpAddress = "127.0.0.1"
+        };
+        await _mediator.Send(command);
 
         return NoContent();
     }
