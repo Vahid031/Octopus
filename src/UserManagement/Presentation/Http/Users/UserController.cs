@@ -6,6 +6,7 @@ using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
+using Octopus.UserManagement.Core.Contract.Users.Commands.SetPasswordWithOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithPassword;
 using Octopus.UserManagement.Presentation.Http.Users.Models;
@@ -61,8 +62,8 @@ public class UserController : ControllerBase
 
     [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
-    [HttpPut("password/change")]
     [Authorize]
+    [HttpPut("password/change")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var command = new ChangePasswordCommand
@@ -78,14 +79,15 @@ public class UserController : ControllerBase
 
     [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
-    [HttpPut("password/set")]
     [Authorize]
-    public async Task<ActionResult> SetPassword([FromBody] SetPasswordRequest request)
+    [HttpPut("otp/set-password")]
+    public async Task<ActionResult> SetPassword([FromBody] SetPasswordWithOtpRequest request)
     {
-        var command = new ChangePasswordCommand
+        var command = new SetPasswordWithOtpCommand
         {
-            OldPassword = request.ComparePassword,
+            Code = request.Code,
             NewPassword = request.NewPassword,
+            ComparePassword = request.ComparePassword,
             UserId = HttpContext.GetUserId()
         };
 
