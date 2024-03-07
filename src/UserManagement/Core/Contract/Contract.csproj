@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<RootNamespace>Octopus.UserManagement.Core.Contract</RootNamespace>
+		<AssemblyName>Octopus.UserManagement.Core.Contract</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\framework\Core\Contract\Contract.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Users\Commands\Deactivate\" />
+	  <Folder Include="Users\Models\" />
+	  <Folder Include="Users\Services\" />
+	</ItemGroup>
+
+</Project>

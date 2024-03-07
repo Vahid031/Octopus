@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Octopus.Catalog.Core.Application.Products.Events;
 using Octopus.Catalog.Core.Contract.Products.Commands;
+using Octopus.Catalog.Core.Contract.Products.Notifications;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Catalog.Core.Domain.Products.Services;
 using Octopus.Catalog.Core.Domain.Products.ValueObjects;

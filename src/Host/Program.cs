@@ -1,11 +1,13 @@
 ﻿using Octopus.Host;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using System.Diagnostics;
 
 Console.Title = $"{AppInfo.ServiceName}  --->  {Directory.GetCurrentDirectory()}";
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
+    .CreateLogger();
 
 try
 {
@@ -29,7 +31,7 @@ try
         .Enrich.WithProperty("serviceName", AppInfo.ServiceName)
         .Enrich.WithProperty("serviceVersion", AppInfo.ServiceVersion)
         .Enrich.WithProperty("env", builder.Environment.EnvironmentName)
-        //.Enrich.With<TelemetryEventEnricher>()
+        .Enrich.With<TelemetryEventEnricher>()
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(serviceProvider)
     );
@@ -55,4 +57,25 @@ finally
 {
     Log.Information($"App '{AppInfo.ServiceName}' shutting down");
     await Log.CloseAndFlushAsync();
+}
+
+
+namespace Octopus.Host
+{
+    public class TelemetryEventEnricher : ILogEventEnricher
+    {
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
+            Activity current = Activity.Current;
+            if (current == null)
+                return;
+            if (!string.IsNullOrWhiteSpace(current.ParentId))
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("parentId", new ScalarValue(current.ParentId)));
+            if (current.TraceId != new ActivityTraceId())
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("traceId", new ScalarValue(current.TraceId)));
+            if (!(current.SpanId != new ActivitySpanId()))
+                return;
+            logEvent.AddPropertyIfAbsent(new LogEventProperty("spanId", new ScalarValue(current.SpanId)));
+        }
+    }
 }

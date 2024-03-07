@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Octopus.Catalog.Core.Contract.Products.Models;
+using Octopus.Catalog.Presentation.Http.Products.Models;
 
 namespace Octopus.Catalog.Presentation.Http.Products;
 
-public class ProductProfile : Profile
+public class ProductMappingProfile : Profile
 {
-	public ProductProfile()
-	{
-		CreateMap<ProductItemDto, ProductItemResponse>();
-	}
+    public ProductMappingProfile()
+    {
+        CreateMap<ProductItemDto, ProductItemResponse>();
+    }
 }

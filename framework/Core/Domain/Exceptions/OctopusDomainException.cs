@@ -1,9 +1,9 @@
 ﻿namespace Octopus.Core.Domain.Exceptions;
 
-public abstract class DomainException : Exception
+public abstract class OctopusDomainException : Exception
 {
     protected string[] Parameters { get; set; }
-    protected DomainException(string message, params string[] parameters)
+    protected OctopusDomainException(string message, params string[] parameters)
     : base(message)
     {
         Parameters = parameters;
