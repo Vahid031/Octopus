@@ -20,5 +20,9 @@
 		<ProjectReference Include="..\Contract\Contract.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Users\Commands\SetPasswordWithOtp\" />
+	</ItemGroup>
+
 
 </Project>

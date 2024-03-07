@@ -40,9 +40,6 @@ public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
 
         var code = user.CreateNewOtpCode(request.IpAddress, _otpOptions.Value.ExpireDuration);
 
-        // ToDo: Replace with integration event handler
-        Console.WriteLine($"Otp Code: {code}");
-
         // ToDo: Replace magic word with const
         var message = $"Your code : {code}";
         var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber.ToString());
