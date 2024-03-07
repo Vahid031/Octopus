@@ -8,13 +8,16 @@ namespace Octopus.UserManagement.Core.Mongo.Users;
 
 internal class MongoUserRepository : MongoRepositoryBase<User, UserId>, IUserRepository
 {
-    public const string CollectionName = "Users";
-    public MongoUserRepository(IUnitOfWork unitOfWork, IMongoCollection<User> collection)
-        : base(unitOfWork, collection)
-    {
-    }
+	public const string CollectionName = "Users";
+	public MongoUserRepository(IUnitOfWork unitOfWork, IMongoCollection<User> collection)
+		: base(unitOfWork, collection)
+	{
+	}
 
-    public Task<User> GetByUsername(string username) =>
-        _collection.Find(x => x.Username.Equals(username)).SingleOrDefaultAsync();
 
+	public Task<User> GetByUserName(string userName) =>
+		_collection.Find(x => x.UserName.Equals(userName)).SingleOrDefaultAsync();
+
+	public bool Exists(string userName) =>
+		_collection.Find(x => x.UserName == userName).Any();
 }

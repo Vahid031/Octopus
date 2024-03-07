@@ -5,6 +5,7 @@ using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
+using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 using Octopus.UserManagement.Core.Mongo.Users;
 
 namespace Octopus.UserManagement.Core.Mongo;

@@ -5,7 +5,7 @@ namespace Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
 
 public record SignInWithOtpCommand : IRequest<TokenModel>
 {
-    public string Username { get; init; }
+    public string UserName { get; init; }
     public string IpAddress { get; init; }
     public string Code { get; init; }
 }

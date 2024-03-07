@@ -2,6 +2,6 @@
 
 public record OtpOptions
 {
-    public int MaxRetryCount { get; init; }
-    public TimeSpan ExpireDuration { get; init; }
+	public int MaxRetryCount { get; init; }
+	public TimeSpan ExpireDuration { get; init; }
 }

@@ -60,19 +60,22 @@ finally
 }
 
 
-public class TelemetryEventEnricher : ILogEventEnricher
+namespace Octopus.Host
 {
-    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+    public class TelemetryEventEnricher : ILogEventEnricher
     {
-        Activity current = Activity.Current;
-        if (current == null)
-            return;
-        if (!string.IsNullOrWhiteSpace(current.ParentId))
-            logEvent.AddPropertyIfAbsent(new LogEventProperty("parentId", new ScalarValue(current.ParentId)));
-        if (current.TraceId != new ActivityTraceId())
-            logEvent.AddPropertyIfAbsent(new LogEventProperty("traceId", new ScalarValue(current.TraceId)));
-        if (!(current.SpanId != new ActivitySpanId()))
-            return;
-        logEvent.AddPropertyIfAbsent(new LogEventProperty("spanId", new ScalarValue(current.SpanId)));
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
+            Activity current = Activity.Current;
+            if (current == null)
+                return;
+            if (!string.IsNullOrWhiteSpace(current.ParentId))
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("parentId", new ScalarValue(current.ParentId)));
+            if (current.TraceId != new ActivityTraceId())
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("traceId", new ScalarValue(current.TraceId)));
+            if (!(current.SpanId != new ActivitySpanId()))
+                return;
+            logEvent.AddPropertyIfAbsent(new LogEventProperty("spanId", new ScalarValue(current.SpanId)));
+        }
     }
 }

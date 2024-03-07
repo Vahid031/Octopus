@@ -17,8 +17,8 @@ public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
     private readonly IMessageDispatcher _messageDispatcher;
     private readonly IOptions<OtpOptions> _otpOptions;
 
-    public SendOtpCommandHandler(IUserRepository userRepository, 
-        ILogger<SendOtpCommandHandler> logger, 
+    public SendOtpCommandHandler(IUserRepository userRepository,
+        ILogger<SendOtpCommandHandler> logger,
         IMessageDispatcher messageDispatcher,
         IOptions<OtpOptions> otpOptions)
     {
@@ -30,20 +30,19 @@ public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
 
     public async Task Handle(SendOtpCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByUsername(request.UserName);
+        var user = await _userRepository.GetByUserName(request.UserName);
 
         if (user == null)
         {
-            _logger.LogError("UserName:'{username}' not found", request.UserName);
-            throw new OctopusException("UserName:'{username}' not found", request.UserName);
+            _logger.LogError("UserName:'{userName}' not found", request.UserName);
+            throw new OctopusException("UserName:'{userName}' not found", request.UserName);
         }
 
         var code = user.CreateNewOtpCode(request.IpAddress, _otpOptions.Value.ExpireDuration);
 
-        
         // ToDo: Replace magic word with const
         var message = $"Your code : {code}";
-        var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber);
+        var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber.ToString());
 
         await _messageDispatcher.Raise(@event);
     }

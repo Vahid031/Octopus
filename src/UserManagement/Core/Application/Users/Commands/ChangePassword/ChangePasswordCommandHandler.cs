@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Octopus.Core.Contract.Exceptions;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
 using Octopus.UserManagement.Core.Domain.Users.Services;
@@ -9,12 +10,13 @@ internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComm
 {
     private readonly IPasswordDomainService _passwordDomainService;
     private readonly IUserRepository _userRepository;
+    private readonly ILogger<ChangePasswordCommandHandler> _logger;
 
-    public ChangePasswordCommandHandler(IPasswordDomainService passwordDomainService,
-        IUserRepository userRepository)
+    public ChangePasswordCommandHandler(IPasswordDomainService passwordDomainService, IUserRepository userRepository, ILogger<ChangePasswordCommandHandler> logger)
     {
         _passwordDomainService = passwordDomainService;
         _userRepository = userRepository;
+        _logger = logger;
     }
 
     public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
@@ -24,7 +26,7 @@ internal class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComm
 
         if (user is null)
         {
-            // ToDo: log
+            _logger.LogInformation("User not found, userId: {userId}", request.UserId);
             throw new OctopusException("User not found, userId: {userId}", request.UserId.ToString());
         }
 

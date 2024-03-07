@@ -2,5 +2,5 @@
 
 public record SendOtpRequest
 {
-    public string Username { get; init; }
+    public string UserName { get; init; }
 }

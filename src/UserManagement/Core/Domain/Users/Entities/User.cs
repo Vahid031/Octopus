@@ -1,161 +1,134 @@
 ﻿using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Enums;
+using Octopus.UserManagement.Core.Domain.Users.Exceptions;
 using Octopus.UserManagement.Core.Domain.Users.Models;
+using Octopus.UserManagement.Core.Domain.Users.Rules;
 using Octopus.UserManagement.Core.Domain.Users.Services;
+using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
 namespace Octopus.UserManagement.Core.Domain.Users.Entities;
 
 public class User : AggregateRoot<UserId>
 {
-    private User() { }
+	#region Properties
 
-    private User(string username, string phoneNumber, string firstName, string lastName)
-    {
-        //ToDo: Check rules
+	public string UserName { get; private set; }
+	public Password Password { get; private set; }
+	public PhoneNumber PhoneNumber { get; private set; }
+	public string FirstName { get; private set; }
+	public string LastName { get; private set; }
+	public DateTimeOffset CreatedAt { get; private set; }
+	public bool IsActivated { get; private set; }
 
-        Username = username;
-        PhoneNumber = phoneNumber;
-        FirstName = firstName;
-        LastName = lastName;
-        Roles = new List<RoleType>();
-        OtpCodes = new List<OtpCode>();
-        IsActivated = false;
-    }
+	public List<OtpCode> OtpCodes { get; private set; }
+	public List<RefreshToken> RefreshTokens { get; private set; }
+	public List<RoleType> Roles { get; private set; }
 
-    public static User Create(string username, string phoneNumber, string firstName, string lastName)
-    {
-        return new User(username, phoneNumber, firstName, lastName);
-    }
+	#endregion
 
-    public string Username { get; set; }
-    public string PasswordHash { get; set; }
-    public string PasswordSalt { get; set; }
-    public string PhoneNumber { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public List<OtpCode> OtpCodes { get; set; }
-    public List<RoleType> Roles { get; set; }
-    public List<RefreshToken> RefreshTokens { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public bool IsActivated { get; set; }
+	private User() { }
 
-    public bool OwnsToken(string token)
-    {
-        return RefreshTokens.Any(x => x.Token == token);
-    }
+	private User(IUserRepository userRepository, string userName, PhoneNumber phoneNumber, string firstName, string lastName)
+	{
+		CheckRule(new UserNameMustBeAtLeast3CharacterRule(userName));
+		CheckRule(new UserNameMustBeAtLast150CharacterRule(userName));
+		CheckRule(new UserNameMustBeUniqueRule(userRepository, userName));
 
-    public string CreateNewOtpCode(string ipAddress, TimeSpan expireDuration)
-    {
-        //ToDo: Check rules
+		CheckRule(new UserFirstNameMustBeAtLeast2CharacterRule(firstName));
+		CheckRule(new UserFirstNameMustBeAtLast50CharacterRule(firstName));
 
-        var otpCode = new OtpCode
-        {
-            CreatedAt = DateTimeOffset.UtcNow,
-            Code = Random.Shared.Next(10000, 99999).ToString(),
-            RetryCount = 0,
-            CreatedByIp = ipAddress,
-            Expires = DateTimeOffset.UtcNow.Add(expireDuration)
-        };
+		CheckRule(new UserLastNameMustBeAtLeast2CharacterRule(lastName));
+		CheckRule(new UserLastNameMustBeAtLast50CharacterRule(lastName));
 
-        OtpCodes.Add(otpCode);
+		UserName = userName;
+		PhoneNumber = phoneNumber;
+		FirstName = firstName;
+		LastName = lastName;
+		IsActivated = false;
 
-        return otpCode.Code;
-    }
+		Roles = new List<RoleType>();
+		OtpCodes = new List<OtpCode>();
+		RefreshTokens = new List<RefreshToken>();
+	}
 
-    private bool IsValidCode(string code)
-    {
-        //var OtpCode = OtpCodes.LastOrDefault();
+	public static User Create(IUserRepository userRepository, string userName, string phoneNumber, string firstName, string lastName)
+	{
+		return new User(userRepository, userName, phoneNumber, firstName, lastName);
+	}
 
-        //if (OtpCode is null) return false;
+	public bool OwnsToken(string token)
+	{
+		return RefreshTokens.Any(x => x.Token == token);
+	}
 
-        //if (!OtpCode.Code.Equals(code)) return false;
+	public string CreateNewOtpCode(string ipAddress, TimeSpan expireDuration)
+	{
+		var otpCode = OtpCode.Create(0, ipAddress, expireDuration);
 
-        //if (OtpCode.IsExpired(options.Value.TokenDuration)) return false;
+		OtpCodes.Add(otpCode);
 
-        return true;
-    }
+		return otpCode.Code;
+	}
 
-    public TokenModel SignInWithPassword(IUserTokenGenerator tokenGenerator,
-        IPasswordDomainService passwordService, string password, string ipAddress)
-    {
-        //ToDo: Check rules
-        //passwordService.Equal(password, PasswordHash, PasswordSalt);
+	private bool IsValidCode(string code)
+	{
+		if (OtpCodes is null || !OtpCodes.Any())
+			return false;
 
-        return GenerateNewToken(tokenGenerator);
-    }
+		var otpCode = OtpCodes.LastOrDefault();
 
-    public TokenModel SignInWithOtp(IUserTokenGenerator tokenGenerator, string code, string ipAddress)
-    {
-        //ToDo: Check rules
-        //Code exists
+		if (otpCode == null || !otpCode.Code.Equals(code))
+			return false;
 
+		if (otpCode.IsExpired)
+			return false;
 
-        return GenerateNewToken(tokenGenerator);
-    }
+		return true;
+	}
 
-    private TokenModel GenerateNewToken(IUserTokenGenerator tokenGenerator)
-    {
-        var tokenModel = tokenGenerator.GenerateToken(this);
+	public TokenModel SignInWithPassword(IUserTokenGenerator tokenGenerator,
+		IPasswordDomainService passwordService, string password, string ipAddress)
+	{
+		CheckRule(new UserPasswordMustBeEqualRule(passwordService, password, Password.PasswordHash, Password.PasswordSalt));
 
-        RefreshTokens.Add(new RefreshToken
-        {
-            CreatedAt = DateTimeOffset.UtcNow,
-            CreatedByIp = tokenModel.IpAddress,
-            Expires = tokenModel.RefreshTokenExpires,
-            Token = tokenModel.RefreshToken
-        });
+		return GenerateNewToken(tokenGenerator);
+	}
 
-        return tokenModel;
-    }
+	public TokenModel SignInWithOtp(IUserTokenGenerator tokenGenerator, string code, string ipAddress)
+	{
+		var isValidCode = IsValidCode(code);
 
-    public void SetPassword(IPasswordDomainService passwordService, string password)
-    {
-        //ToDo: Check rules
+		if (!isValidCode)
+			throw new UserOtpCodeInvalidException(code);
 
-        PasswordHash = passwordService.Hash(password, out var passwordSalt);
-        PasswordSalt = passwordSalt;
-    }
+		return GenerateNewToken(tokenGenerator);
+	}
 
-    public void ChangePassword(IPasswordDomainService passwordService, string oldPassword, string newPassword)
-    {
-        //ToDo: Check rules
-        //passwordService.Equal(password, PasswordHash, PasswordSalt);
+	private TokenModel GenerateNewToken(IUserTokenGenerator tokenGenerator)
+	{
+		var tokenModel = tokenGenerator.GenerateToken(new(Id, FirstName, LastName, UserName, PhoneNumber.ToString(), Roles));
 
-        PasswordHash = passwordService.Hash(newPassword, out var passwordSalt);
-        PasswordSalt = passwordSalt;
-    }
+		RefreshTokens.Add(RefreshToken.Create(tokenModel.RefreshToken, tokenModel.RefreshTokenExpires, DateTimeOffset.UtcNow, tokenModel.IpAddress));
 
-    public void Active()
-    {
-        //ToDo: Check rules
+		return tokenModel;
+	}
 
-        IsActivated = true;
-    }
-}
+	public void SetPassword(IPasswordDomainService passwordService, string password)
+	{
+		CheckRule(new UserPasswordMustBeAtLeast3CharacterRule(password));
+		Password = passwordService.Hash(password);
+	}
 
-public class OtpCode
-{
-    public string Code { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public int RetryCount { get; set; }
-    public string CreatedByIp { get; set; }
-    public DateTimeOffset Expires { get; set; }
-    public bool IsExpired => DateTimeOffset.UtcNow >= Expires;
-    public DateTimeOffset? Revoked { get; set; }
-    public string RevokedByIp { get; set; }
-    public bool IsActive => Revoked == null && !IsExpired;
-}
+	public void ChangePassword(IPasswordDomainService passwordService, string oldPassword, string newPassword)
+	{
+		CheckRule(new UserPasswordMustBeEqualRule(passwordService, oldPassword, Password.PasswordHash, Password.PasswordSalt));
 
-public class RefreshToken
-{
-    public string Token { get; set; }
-    public DateTimeOffset Expires { get; set; }
-    public bool IsExpired => DateTimeOffset.UtcNow >= Expires;
-    public DateTimeOffset CreatedAt { get; set; }
-    public string CreatedByIp { get; set; }
-    public DateTimeOffset? Revoked { get; set; }
-    public string RevokedByIp { get; set; }
-    public string ReplacedByToken { get; set; }
-    public bool IsActive => Revoked == null && !IsExpired;
+		SetPassword(passwordService, newPassword);
+	}
+
+	public void Active()
+	{
+		IsActivated = true;
+	}
 }

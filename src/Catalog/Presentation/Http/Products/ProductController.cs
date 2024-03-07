@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Octopus.Catalog.Core.Contract.Products.Commands;
 using Octopus.Catalog.Core.Contract.Products.Queries;
+using Octopus.Catalog.Presentation.Http.Products.Models;
 using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 

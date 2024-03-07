@@ -4,7 +4,7 @@ using Octopus.Presentation.Http.EnvelopModels;
 using System.Diagnostics;
 using System.Net;
 
-namespace Octopus.Host.MiddleWares;
+namespace Octopus.Host.Middlewares;
 
 public class OctopusExceptionHandlerMiddleware : IMiddleware
 {

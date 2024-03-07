@@ -4,18 +4,18 @@ using Octopus.Core.Domain.ValueObjects;
 namespace Octopus.Core.Domain.Services;
 
 public interface IRepository<TAggregate, TId>
-    where TAggregate : AggregateRoot<TId>
-    where TId : IIdBase
+	where TAggregate : AggregateRoot<TId>
+	where TId : IIdBase
 {
-    Task<TAggregate> GetById(TId id);
+	Task<TAggregate> GetById(TId id);
 
-    Task Insert(TAggregate aggregate);
+	Task Insert(TAggregate aggregate);
 
-    Task Update(TAggregate aggregate);
+	Task Update(TAggregate aggregate);
 
-    Task DeleteById(TId id);
+	Task DeleteById(TId id);
 
-    Task<bool> Exisits(TId id);
+	Task<bool> Exists(TId id);
 
-    Task Commit();
+	Task Commit();
 }

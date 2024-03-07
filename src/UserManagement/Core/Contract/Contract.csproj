@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Users\Commands\Deactivate\" />
 	  <Folder Include="Users\Models\" />
 	  <Folder Include="Users\Services\" />
 	</ItemGroup>
