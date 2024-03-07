@@ -13,6 +13,10 @@ internal class MockUserRepository : IUserRepository
 
     public MockUserRepository()
     {
+        foreach (var user in _users)
+        {
+            user.Id = UserId.New();
+        }
     }
 
     public Task<User> GetByUserName(string userName) =>
@@ -25,6 +29,7 @@ internal class MockUserRepository : IUserRepository
 
     public async Task Insert(User user)
     {
+        user.Id = UserId.New();
         _users.Add(user);
         await Task.CompletedTask;
     }
