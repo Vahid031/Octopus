@@ -62,8 +62,10 @@ public class Startup
             };
             c.AddSecurityDefinition(securitySchema.Reference.Id, securitySchema);
 
-            var securityRequirement = new OpenApiSecurityRequirement();
-            securityRequirement.Add(securitySchema, Array.Empty<string>());
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { securitySchema, Array.Empty<string>() }
+            };
             c.AddSecurityRequirement(securityRequirement);
         });
 

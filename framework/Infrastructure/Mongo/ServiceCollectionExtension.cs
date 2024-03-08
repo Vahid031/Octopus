@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Octopus.Infrastructure.Mongo.Configurations;
 using Octopus.Infrastructure.Mongo.Shared;
@@ -30,6 +31,8 @@ public static class ServiceCollectionExtension
             var mongoClient = sp.GetRequiredService<IMongoClient>();
             return mongoClient.GetDatabase(mongoOptions.Value.DatabaseName);
         });
+
+        BsonSerializer.RegisterSerializer(new DateTimeOffsetBsonSerializer());
 
         return services;
     }

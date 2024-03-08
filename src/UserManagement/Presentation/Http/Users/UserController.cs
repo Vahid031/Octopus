@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+using Octopus.UserManagement.Core.Contract.Users.Commands.Register;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SetPassword;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SignInWithOtp;
@@ -80,7 +81,7 @@ public class UserController : ControllerBase
 	[ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
 	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
 	[Authorize]
-	[HttpPut("otp/set-password")]
+	[HttpPut("password/set")]
 	public async Task<ActionResult> SetPassword([FromBody] SetPasswordWithOtpRequest request)
 	{
 		var command = new SetPasswordCommand
@@ -109,4 +110,15 @@ public class UserController : ControllerBase
 
 		return NoContent();
 	}
+
+    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPost("__register")]
+    public async Task<ActionResult> Register([FromBody] RegisterCommand request)
+    {
+        
+        await _mediator.Send(request);
+
+        return NoContent();
+    }
 }

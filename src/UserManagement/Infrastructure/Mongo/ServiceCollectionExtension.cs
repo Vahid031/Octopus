@@ -34,11 +34,16 @@ public static class ServiceCollectionExtension
 
         BsonClassMap.RegisterClassMap<User>(cm =>
         {
+            cm.MapMember(m => m.UserName).SetElementName("UserName");
             cm.MapMember(m => m.FirstName).SetElementName("FirstName");
             cm.MapMember(m => m.LastName).SetElementName("LastName");
             cm.MapMember(m => m.RefreshTokens).SetElementName("RefreshTokens");
             cm.MapMember(m => m.PhoneNumber).SetElementName("PhoneNumber");
             cm.MapMember(m => m.OtpCodes).SetElementName("OtpCodes");
+            cm.MapMember(m => m.Password).SetElementName("Password");
+            cm.MapMember(m => m.IsActivated).SetElementName("IsActivated");
+            cm.MapMember(m => m.CreatedAt).SetElementName("CreatedAt");
+            cm.MapMember(m => m.Roles).SetElementName("Roles");
 
             cm.SetIgnoreExtraElements(true);
         });
@@ -65,6 +70,23 @@ public static class ServiceCollectionExtension
             cm.MapMember(m => m.Revoked).SetElementName("Revoked");
             cm.MapMember(m => m.RevokedByIp).SetElementName("RevokedByIp");
             cm.MapMember(m => m.Expires).SetElementName("Expires");
+
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<Password>(cm =>
+        {
+            cm.MapMember(m => m.PasswordSalt).SetElementName("PasswordSalt");
+            cm.MapMember(m => m.PasswordHash).SetElementName("PasswordHash");
+
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<PhoneNumber>(cm =>
+        {
+            cm.MapMember(m => m.Extension).SetElementName("Extension");
+            cm.MapMember(m => m.Number).SetElementName("Number");
+            cm.MapMember(m => m.CountryCode).SetElementName("CountryCode");
 
             cm.SetIgnoreExtraElements(true);
         });

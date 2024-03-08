@@ -24,6 +24,6 @@
 		<PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
 		<PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Update="Microsoft.Extensions.Options" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions " Version="8.0.0" />
+		<PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions " Version="8.0.0" />
 	</ItemGroup>
 </Project>

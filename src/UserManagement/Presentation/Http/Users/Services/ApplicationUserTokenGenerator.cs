@@ -27,7 +27,8 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
     {
         var roleClaims = new List<Claim>();
 
-        for (int i = 0; i < user.Roles.Count; i++)
+
+        for (int i = 0; i < user.Roles.Count ; i++)
         {
             roleClaims.Add(new Claim("roles", user.Roles[i].ToString()));
         }
