@@ -14,7 +14,7 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddUserManagementMongoServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserRepository, MongoUserRepository>();
+        services.AddSingleton<IUserRepository, FakeUserRepository>();
 
         services.AddSingleton(sp =>
         {
@@ -92,5 +92,53 @@ public static class ServiceCollectionExtension
         });
 
         return services;
+    }
+}
+
+
+internal class FakeUserRepository : IUserRepository
+{
+    public const string CollectionName = "Users";
+    private readonly List<User> _users = new();
+
+    public Task Commit() => Task.CompletedTask;
+
+    public Task DeleteById(UserId id)
+    {
+        _users.Remove(_users.First(m => m.Id.Value == id.Value));
+        return Task.CompletedTask;
+    }
+
+    public bool Exists(string userName)
+    {
+        return _users.Any(m => m.UserName.Equals(userName));
+    }
+
+    public Task<bool> Exists(UserId id)
+    {
+        return Task.FromResult(_users.Any(m => m.Id.Value.Equals(id.Value)));
+    }
+
+    public Task<User> GetById(UserId id)
+    {
+        return Task.FromResult(_users.FirstOrDefault(m => m.Id.Value.Equals(id.Value)));
+    }
+
+    public Task<User> GetByUserName(string userName)
+    {
+        return Task.FromResult(_users.FirstOrDefault(m => m.UserName.Equals(userName)));
+    }
+
+    public Task Insert(User aggregate)
+    {
+        _users.Add(aggregate);
+        return Task.CompletedTask;
+    }
+
+    public Task Update(User aggregate)
+    {
+        _users.Remove(_users.First(m => m.Id.Value == aggregate.Id.Value));
+        _users.Add(aggregate);
+        return Task.CompletedTask;
     }
 }
