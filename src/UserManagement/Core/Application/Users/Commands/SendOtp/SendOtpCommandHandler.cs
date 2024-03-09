@@ -30,12 +30,12 @@ public record SendOtpCommandHandler : IRequestHandler<SendOtpCommand>
 
     public async Task Handle(SendOtpCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByUserName(request.UserName);
+        var user = await _userRepository.GetByPhoneNumber(request.PhoneNumber);
 
         if (user == null)
         {
-            _logger.LogError("UserName:'{userName}' not found", request.UserName);
-            throw new OctopusException("UserName:'{userName}' not found", request.UserName);
+            _logger.LogError("PhoneNumber:'{phoneNumber}' not found", request.PhoneNumber);
+            throw new OctopusException("User not found, phoneNumber: {phoneNumber}", request.PhoneNumber);
         }
 
         var code = user.CreateNewOtpCode(request.IpAddress, _otpOptions.Value.ExpireDuration);

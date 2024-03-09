@@ -1,7 +1,6 @@
 ﻿using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Enums;
-using Octopus.UserManagement.Core.Domain.Users.Exceptions;
 using Octopus.UserManagement.Core.Domain.Users.Models;
 using Octopus.UserManagement.Core.Domain.Users.Rules;
 using Octopus.UserManagement.Core.Domain.Users.Services;
@@ -113,5 +112,9 @@ public class User : AggregateRoot<UserId>
     public void Active()
     {
         IsActivated = true;
+    }
+    public void Deactivate()
+    {
+        IsActivated = false;
     }
 }
