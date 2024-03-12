@@ -129,6 +129,11 @@ internal class FakeUserRepository : IUserRepository
         return Task.FromResult(_users.FirstOrDefault(m => m.UserName.Equals(userName)));
     }
 
+    public Task<User> GetByPhoneNumber(string phoneNumber)
+    {
+        return Task.FromResult(_users.Single(u => u.PhoneNumber.Equals(phoneNumber)));
+    }
+
     public Task Insert(User aggregate)
     {
         _users.Add(aggregate);

@@ -54,7 +54,7 @@ public class UserController : ControllerBase
 		{
 			IpAddress = "127.0.0.1",
 			Code = request.Code,
-			UserName = request.UserName,
+			PhoneNumber = request.PhoneNumber,
 		};
 		var result = await _mediator.Send(command);
 
@@ -82,7 +82,7 @@ public class UserController : ControllerBase
 	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
 	[Authorize]
 	[HttpPut("password/set")]
-	public async Task<ActionResult> SetPassword([FromBody] SetPasswordWithOtpRequest request)
+	public async Task<ActionResult> SetPassword([FromBody] SetPasswordRequest request)
 	{
 		var command = new SetPasswordCommand
 		{
@@ -96,29 +96,31 @@ public class UserController : ControllerBase
 		return NoContent();
 	}
 
-	[ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+	[ProducesResponseType(typeof(SuccessEnvelop<SendOtpResponse>), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
 	[HttpPost("otp/send")]
 	public async Task<ActionResult> SendOtp([FromBody] SendOtpRequest request)
 	{
 		var command = new SendOtpCommand()
 		{
-			UserName = request.UserName,
+			PhoneNumber = request.PhoneNumber,
 			IpAddress = "127.0.0.1"
 		};
-		await _mediator.Send(command);
+
+		var expires = await _mediator.Send(command);
+		var sendOtpResponse = new SendOtpResponse() { Expires = expires };
+
+		return Ok(sendOtpResponse);
+	}
+
+	[ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+	[HttpPost("__register")]
+	public async Task<ActionResult> Register([FromBody] RegisterCommand request)
+	{
+
+		await _mediator.Send(request);
 
 		return NoContent();
 	}
-
-    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
-    [HttpPost("__register")]
-    public async Task<ActionResult> Register([FromBody] RegisterCommand request)
-    {
-        
-        await _mediator.Send(request);
-
-        return NoContent();
-    }
 }

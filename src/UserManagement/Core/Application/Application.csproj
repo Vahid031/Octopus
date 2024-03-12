@@ -22,7 +22,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Users\Commands\Activate\" />
-	  <Folder Include="Users\Commands\Deactivate\" />
 	</ItemGroup>
 
 
