@@ -5,35 +5,32 @@ using Octopus.UserManagement.Core.Domain.Users.Models;
 using Octopus.UserManagement.Core.Domain.Users.Services;
 using Octopus.UserManagement.Presentation.Http.Configurations.Options;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Sockets;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Octopus.UserManagement.Presentation.Http.Users.Services;
 
-internal class ApplicationUserTokenGenerator : IUserTokenGenerator
+internal class JwtUserTokenGenerator : IUserTokenGenerator
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
 
-    public ApplicationUserTokenGenerator(
+    public JwtUserTokenGenerator(
         IOptions<JwtOptions> jwtOptions)
     {
         _jwtOptions = jwtOptions;
     }
 
-    public TokenModel GenerateToken(UserInfoModel user)
+    public TokenModel GenerateToken(UserInfoModel user, string ipAddress)
     {
         var roleClaims = new List<Claim>();
 
 
-        for (int i = 0; i < user.Roles.Count ; i++)
+        for (int i = 0; i < user.Roles.Count; i++)
         {
             roleClaims.Add(new Claim("roles", user.Roles[i].ToString()));
         }
 
-        string ipAddress = GetHostIpAddress();
         var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
@@ -87,19 +84,5 @@ internal class ApplicationUserTokenGenerator : IUserTokenGenerator
         rngCryptoServiceProvider.GetBytes(randomBytes);
         // convert random bytes to hex string
         return BitConverter.ToString(randomBytes).Replace("-", "");
-    }
-
-    private string GetHostIpAddress()
-    {
-        var host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ip in host.AddressList)
-        {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return ip.ToString();
-            }
-        }
-
-        return string.Empty;
     }
 }

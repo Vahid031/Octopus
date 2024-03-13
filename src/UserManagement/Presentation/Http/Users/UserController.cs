@@ -36,7 +36,7 @@ public class UserController : ControllerBase
 	{
 		var command = new SignInWithPasswordCommand
 		{
-			IpAddress = "127.0.0.1",
+			IpAddress = Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString(),
 			Password = request.Password,
 			UserName = request.UserName,
 		};
@@ -52,7 +52,7 @@ public class UserController : ControllerBase
 	{
 		var command = new SignInWithOtpCommand
 		{
-			IpAddress = "127.0.0.1",
+			IpAddress = Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString(),
 			Code = request.Code,
 			PhoneNumber = request.PhoneNumber,
 		};
@@ -87,7 +87,6 @@ public class UserController : ControllerBase
 		var command = new SetPasswordCommand
 		{
 			NewPassword = request.NewPassword,
-			ComparePassword = request.ComparePassword,
 			UserId = HttpContext.GetUserId()
 		};
 
@@ -104,8 +103,8 @@ public class UserController : ControllerBase
 		var command = new SendOtpCommand()
 		{
 			PhoneNumber = request.PhoneNumber,
-			IpAddress = "127.0.0.1"
-		};
+			IpAddress = Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()
+        };
 
 		var expires = await _mediator.Send(command);
 		var sendOtpResponse = new SendOtpResponse() { Expires = expires };

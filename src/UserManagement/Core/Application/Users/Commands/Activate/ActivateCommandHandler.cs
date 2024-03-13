@@ -6,7 +6,7 @@ using Octopus.UserManagement.Core.Domain.Users.Services;
 
 namespace Octopus.UserManagement.Core.Application.Users.Commands.Activate;
 
-public class ActivateCommandHandler : IRequestHandler<ActivateCommand>
+internal class ActivateCommandHandler : IRequestHandler<ActivateCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ActivateCommandHandler> _logger;

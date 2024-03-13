@@ -27,5 +27,5 @@ public abstract class AggregateRoot<TId> : EntityBase<TId> where TId : IIdBase
 
     public void ClearEvents() => _events.Clear();
 
-    protected void CheckRule([NotNull] IBussinessRule rule) => rule.Validate();
+    protected void CheckRule([NotNull] IBusinessRule rule) => rule.Validate();
 }

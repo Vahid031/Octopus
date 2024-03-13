@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using Octopus.Core.Domain.Entities;
-using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
-using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 using Octopus.UserManagement.Core.Mongo.Users;
 
 namespace Octopus.UserManagement.Core.Mongo;
@@ -24,126 +21,9 @@ public static class ServiceCollectionExtension
 
 
         BsonSerializer.RegisterSerializer(new UserIdBsonSerializer());
+        UserMapClassExtension.Register();
 
-        BsonClassMap.RegisterClassMap<EntityBase<UserId>>(cm =>
-        {
-            cm.MapMember(m => m.Id).SetElementName("_id");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
-        BsonClassMap.RegisterClassMap<User>(cm =>
-        {
-            cm.MapMember(m => m.UserName).SetElementName("UserName");
-            cm.MapMember(m => m.FirstName).SetElementName("FirstName");
-            cm.MapMember(m => m.LastName).SetElementName("LastName");
-            cm.MapMember(m => m.RefreshTokens).SetElementName("RefreshTokens");
-            cm.MapMember(m => m.PhoneNumber).SetElementName("PhoneNumber");
-            cm.MapMember(m => m.OtpCodes).SetElementName("OtpCodes");
-            cm.MapMember(m => m.Password).SetElementName("Password");
-            cm.MapMember(m => m.IsActivated).SetElementName("IsActivated");
-            cm.MapMember(m => m.CreatedAt).SetElementName("CreatedAt");
-            cm.MapMember(m => m.Roles).SetElementName("Roles");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
-        BsonClassMap.RegisterClassMap<RefreshToken>(cm =>
-        {
-            cm.MapMember(m => m.Expires).SetElementName("Expires");
-            cm.MapMember(m => m.RevokedByIp).SetElementName("RevokedByIp");
-            cm.MapMember(m => m.CreatedAt).SetElementName("CreatedAt");
-            cm.MapMember(m => m.CreatedByIp).SetElementName("CreatedByIp");
-            cm.MapMember(m => m.ReplacedByToken).SetElementName("ReplacedByToken");
-            cm.MapMember(m => m.Revoked).SetElementName("Revoked");
-            cm.MapMember(m => m.Token).SetElementName("Token");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
-        BsonClassMap.RegisterClassMap<OtpCode>(cm =>
-        {
-            cm.MapMember(m => m.Code).SetElementName("Code");
-            cm.MapMember(m => m.CreatedAt).SetElementName("CreatedAt");
-            cm.MapMember(m => m.CreatedByIp).SetElementName("CreatedByIp");
-            cm.MapMember(m => m.RetryCount).SetElementName("RetryCount");
-            cm.MapMember(m => m.Revoked).SetElementName("Revoked");
-            cm.MapMember(m => m.RevokedByIp).SetElementName("RevokedByIp");
-            cm.MapMember(m => m.Expires).SetElementName("Expires");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
-        BsonClassMap.RegisterClassMap<Password>(cm =>
-        {
-            cm.MapMember(m => m.PasswordSalt).SetElementName("PasswordSalt");
-            cm.MapMember(m => m.PasswordHash).SetElementName("PasswordHash");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
-        BsonClassMap.RegisterClassMap<PhoneNumber>(cm =>
-        {
-            cm.MapMember(m => m.Extension).SetElementName("Extension");
-            cm.MapMember(m => m.Number).SetElementName("Number");
-            cm.MapMember(m => m.CountryCode).SetElementName("CountryCode");
-
-            cm.SetIgnoreExtraElements(true);
-        });
 
         return services;
-    }
-}
-
-
-internal class FakeUserRepository : IUserRepository
-{
-    public const string CollectionName = "Users";
-    private readonly List<User> _users = new();
-
-    public Task Commit() => Task.CompletedTask;
-
-    public Task DeleteById(UserId id)
-    {
-        _users.Remove(_users.First(m => m.Id.Value == id.Value));
-        return Task.CompletedTask;
-    }
-
-    public bool Exists(string userName)
-    {
-        return _users.Any(m => m.UserName.Equals(userName));
-    }
-
-    public Task<bool> Exists(UserId id)
-    {
-        return Task.FromResult(_users.Any(m => m.Id.Value.Equals(id.Value)));
-    }
-
-    public Task<User> GetById(UserId id)
-    {
-        return Task.FromResult(_users.FirstOrDefault(m => m.Id.Value.Equals(id.Value)));
-    }
-
-    public Task<User> GetByUserName(string userName)
-    {
-        return Task.FromResult(_users.FirstOrDefault(m => m.UserName.Equals(userName)));
-    }
-
-    public Task<User> GetByPhoneNumber(string phoneNumber)
-    {
-        return Task.FromResult(_users.Single(u => u.PhoneNumber.Equals(phoneNumber)));
-    }
-
-    public Task Insert(User aggregate)
-    {
-        _users.Add(aggregate);
-        return Task.CompletedTask;
-    }
-
-    public Task Update(User aggregate)
-    {
-        _users.Remove(_users.First(m => m.Id.Value == aggregate.Id.Value));
-        _users.Add(aggregate);
-        return Task.CompletedTask;
     }
 }

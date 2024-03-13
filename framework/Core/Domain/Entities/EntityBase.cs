@@ -2,7 +2,11 @@
 
 namespace Octopus.Core.Domain.Entities;
 
-public abstract class EntityBase<TId> where TId : IIdBase
+public abstract class EntityBase
 {
-    public TId Id { get; set; }
+}
+
+public abstract class EntityBase<TId> : EntityBase where TId : IIdBase
+{
+    public TId Id { get; protected set; }
 }

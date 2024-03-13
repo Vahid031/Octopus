@@ -11,12 +11,17 @@ internal class SignInWithOtpCommandHandler : IRequestHandler<SignInWithOtpComman
 {
     private readonly IUserRepository _userRepository;
     private readonly IUserTokenGenerator _tokenGenerator;
+    private readonly IOtpConfiguration _otpConfiguration;
     private readonly ILogger<SignInWithOtpCommandHandler> _logger;
 
-    public SignInWithOtpCommandHandler(IUserRepository userRepository, IUserTokenGenerator tokenGenerator, ILogger<SignInWithOtpCommandHandler> logger)
+    public SignInWithOtpCommandHandler(IUserRepository userRepository,
+        IUserTokenGenerator tokenGenerator,
+        IOtpConfiguration otpConfiguration,
+        ILogger<SignInWithOtpCommandHandler> logger)
     {
         _userRepository = userRepository;
         _tokenGenerator = tokenGenerator;
+        _otpConfiguration = otpConfiguration;
         _logger = logger;
     }
 
@@ -26,10 +31,15 @@ internal class SignInWithOtpCommandHandler : IRequestHandler<SignInWithOtpComman
 
         if (user is null)
         {
-            _logger.LogError("PhoneNumber:'{phoneNumber}' not found", request.PhoneNumber);
-            throw new OctopusException("User not found, phoneNumber: {phoneNumber}", request.PhoneNumber);
+            _logger.LogError("User with phone number: '{phoneNumber}' not found", request.PhoneNumber);
+            throw new OctopusException("User with phone number: '{phoneNumber}' not found", request.PhoneNumber);
         }
 
-        return user.SignInWithOtp(_tokenGenerator, request.Code, request.IpAddress);
+        var result = user.SignInWithOtp(_tokenGenerator, _otpConfiguration, request.Code, request.IpAddress);
+
+        await _userRepository.Update(user);
+        await _userRepository.Commit();
+
+        return result;
     }
 }

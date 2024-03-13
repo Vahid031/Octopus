@@ -40,7 +40,7 @@ public static class ServiceCollectionExtension
                 };
             });
 
-        services.AddSingleton<IUserTokenGenerator, ApplicationUserTokenGenerator>();
+        services.AddSingleton<IUserTokenGenerator, JwtUserTokenGenerator>();
 
         return services;
     }

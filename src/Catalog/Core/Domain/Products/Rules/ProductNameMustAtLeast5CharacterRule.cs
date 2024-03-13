@@ -3,7 +3,7 @@ using Octopus.Core.Domain.Rules;
 
 namespace Octopus.Catalog.Core.Domain.Products.Rules;
 
-public class ProductNameMustAtLeast5CharacterRule(string Name) : IBussinessRule
+public class ProductNameMustAtLeast5CharacterRule(string Name) : IBusinessRule
 {
     public void Validate()
     {

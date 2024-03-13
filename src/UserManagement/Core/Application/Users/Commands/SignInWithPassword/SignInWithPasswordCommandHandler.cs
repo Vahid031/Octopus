@@ -32,11 +32,15 @@ internal class SignInWithPasswordCommandHandler : IRequestHandler<SignInWithPass
 
         if (user == null)
         {
-            _logger.LogError("UserName:'{userName}' not found", request.UserName);
-            throw new OctopusException("", request.UserName);
+            _logger.LogError("User with username: '{userName}' not found", request.UserName);
+            throw new OctopusException("User with username: '{userName}' not found", request.UserName);
         }
 
-        return user.SignInWithPassword(_userTokenGenerator,
-            _passwordDomainService, request.Password, request.IpAddress);
+        var result = user.SignInWithPassword(_userTokenGenerator, _passwordDomainService, request.Password, request.IpAddress);
+
+        await _userRepository.Update(user);
+        await _userRepository.Commit();
+
+        return result;
     }
 }

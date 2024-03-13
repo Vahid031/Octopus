@@ -1,6 +1,6 @@
 ﻿namespace Octopus.Core.Domain.Rules;
 
-public interface IBussinessRule
+public interface IBusinessRule
 {
     void Validate();
 }

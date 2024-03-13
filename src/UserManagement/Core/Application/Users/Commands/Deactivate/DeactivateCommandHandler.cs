@@ -6,7 +6,7 @@ using Octopus.UserManagement.Core.Domain.Users.Services;
 
 namespace Octopus.UserManagement.Core.Application.Users.Commands.Deactivate;
 
-public class DeactivateCommandHandler : IRequestHandler<ActivateCommand>
+internal class DeactivateCommandHandler : IRequestHandler<ActivateCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly ILogger<DeactivateCommandHandler> _logger;

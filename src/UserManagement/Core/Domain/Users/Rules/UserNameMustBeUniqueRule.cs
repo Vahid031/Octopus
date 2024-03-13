@@ -4,7 +4,7 @@ using Octopus.UserManagement.Core.Domain.Users.Services;
 
 namespace Octopus.UserManagement.Core.Domain.Users.Rules;
 
-public class UserNameMustBeUniqueRule(IUserRepository UserRepository, string UserName) : IBussinessRule
+public class UserNameMustBeUniqueRule(IUserRepository UserRepository, string UserName) : IBusinessRule
 {
 	public void Validate()
 	{

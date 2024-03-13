@@ -3,7 +3,7 @@ using Octopus.UserManagement.Core.Domain.Users.Exceptions;
 
 namespace Octopus.UserManagement.Core.Domain.Users.Rules;
 
-public class UserLastNameMustBeAtLast50CharacterRule(string LastName) : IBussinessRule
+public class UserLastNameMustBeAtLast50CharacterRule(string LastName) : IBusinessRule
 {
     public void Validate()
     {
