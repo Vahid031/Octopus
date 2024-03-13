@@ -1,6 +1,7 @@
 ﻿using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
+using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
 namespace Octopus.UserManagement.Core.Mongo;
 
@@ -16,9 +17,14 @@ internal class FakeUserRepository : IUserRepository
         return Task.CompletedTask;
     }
 
-    public bool Exists(string userName)
+    public Task<bool> ExistsWithPhoneNumber(PhoneNumber phoneNumber)
     {
-        return _users.Any(m => m.UserName.Equals(userName));
+        return Task.FromResult(_users.Any(m => m.PhoneNumber.Equals(phoneNumber)));
+    }
+
+    public Task<bool> ExistsWithUserName(string userName)
+    {
+        return Task.FromResult(_users.Any(m => m.UserName.Equals(userName)));
     }
 
     public Task<bool> Exists(UserId id)

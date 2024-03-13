@@ -6,10 +6,10 @@ namespace Octopus.UserManagement.Core.Domain.Users.Rules;
 
 internal class RefreshTokenCheckRule : IBusinessRule
 {
-    private readonly IEnumerable<RefreshToken> _refreshTokens;
+    private readonly IEnumerable<RefreshTokenInfo> _refreshTokens;
     private readonly string _token;
 
-    public RefreshTokenCheckRule(IEnumerable<RefreshToken> refreshTokens, string token)
+    public RefreshTokenCheckRule(IEnumerable<RefreshTokenInfo> refreshTokens, string token)
     {
         _refreshTokens = refreshTokens;
         _token = token;

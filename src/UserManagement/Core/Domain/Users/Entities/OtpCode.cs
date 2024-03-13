@@ -17,7 +17,7 @@ public class OtpCode : EntityBase
 
     public string RevokedByIp { get; private protected set; }
 
-    public bool IsActive => RevokedAt == null;
+    public bool IsRevoked => RevokedAt != null;
 
     #endregion
 

@@ -28,7 +28,7 @@ public class User : AggregateRoot<UserId>
 
     public List<OtpCode> OtpCodes { get; private protected set; }
 
-    public List<RefreshToken> RefreshTokens { get; private protected set; }
+    public List<RefreshTokenInfo> RefreshTokens { get; private protected set; }
 
     public List<RoleType> Roles { get; private protected set; }
 
@@ -36,18 +36,8 @@ public class User : AggregateRoot<UserId>
 
     private User() { }
 
-    private User(IUserRepository userRepository, UserId id, string userName, PhoneNumber phoneNumber, string firstName, string lastName)
+    private User(UserId id, string userName, PhoneNumber phoneNumber, string firstName, string lastName)
     {
-        CheckRule(new UserNameMustBeUniqueRule(userRepository, userName));
-        CheckRule(new UserNameMustBeAtLeast3CharacterRule(userName));
-        CheckRule(new UserNameMustBeAtLast150CharacterRule(userName));
-
-        CheckRule(new UserFirstNameMustBeAtLeast2CharacterRule(firstName));
-        CheckRule(new UserFirstNameMustBeAtLast50CharacterRule(firstName));
-
-        CheckRule(new UserLastNameMustBeAtLeast2CharacterRule(lastName));
-        CheckRule(new UserLastNameMustBeAtLast50CharacterRule(lastName));
-
         UserName = userName;
         PhoneNumber = phoneNumber;
         FirstName = firstName;
@@ -58,17 +48,29 @@ public class User : AggregateRoot<UserId>
 
         Roles = new List<RoleType>();
         OtpCodes = new List<OtpCode>();
-        RefreshTokens = new List<RefreshToken>();
+        RefreshTokens = new List<RefreshTokenInfo>();
     }
 
-    public static User Create(IUserRepository userRepository, string userName, string phoneNumber, string firstName, string lastName)
+    public static async Task<User> Create(IUserRepository userRepository, UserId id, string userName, PhoneNumber phoneNumber, string firstName, string lastName)
     {
-        return new User(userRepository, UserId.New(), userName, phoneNumber, firstName, lastName);
+        await CheckRuleAsync(new UserNameMustBeUniqueRule(userRepository, userName));
+        await CheckRuleAsync(new PhoneNumberMustBeUniqueRule(userRepository, phoneNumber));
+        CheckRule(new UserNameMustBeAtLeast3CharacterRule(userName));
+        CheckRule(new UserNameMustBeAtLast150CharacterRule(userName));
+
+        CheckRule(new UserFirstNameMustBeAtLeast2CharacterRule(firstName));
+        CheckRule(new UserFirstNameMustBeAtLast50CharacterRule(firstName));
+
+        CheckRule(new UserLastNameMustBeAtLeast2CharacterRule(lastName));
+        CheckRule(new UserLastNameMustBeAtLast50CharacterRule(lastName));
+
+
+        return new(id, userName, phoneNumber, firstName, lastName);
     }
 
     public OtpModel CreateNewOtpCode(IOtpConfiguration otpConfiguration, string ipAddress)
     {
-        CheckRule(new SendOtpCodeRule(OtpCodes));
+        CheckRule(new SendOtpCodeRule(otpConfiguration, OtpCodes));
 
         var otpCode = OtpCode.Create(ipAddress);
 
@@ -95,7 +97,7 @@ public class User : AggregateRoot<UserId>
         var otpCode = OtpCodes.LastOrDefault();
         otpCode?.Retry();
 
-        CheckRule(new OtpCodeCheckRule(otpConfiguration, otpCode, code));
+        CheckRule(new SignInWithOtpCodeRule(otpConfiguration, otpCode, code));
 
         otpCode!.Revoke(ipAddress);
 
@@ -107,7 +109,7 @@ public class User : AggregateRoot<UserId>
         var userInfo = new UserInfoModel(Id, FirstName, LastName, UserName, PhoneNumber.ToString(), Roles);
         var tokenModel = tokenGenerator.GenerateToken(userInfo, ipAddress);
 
-        RefreshTokens.Add(RefreshToken.Create(tokenModel.RefreshToken, tokenModel.RefreshTokenExpires, tokenModel.IpAddress));
+        RefreshTokens.Add(RefreshTokenInfo.Create(tokenModel.RefreshToken, tokenModel.RefreshTokenExpires, tokenModel.IpAddress));
 
         return tokenModel;
     }
@@ -126,7 +128,7 @@ public class User : AggregateRoot<UserId>
         SetPassword(passwordService, newPassword);
     }
 
-    public TokenModel RefreshNewToken(IUserTokenGenerator tokenGenerator,
+    public TokenModel RefreshToken(IUserTokenGenerator tokenGenerator,
         string token, string ipAddress)
     {
         CheckRule(new RefreshTokenCheckRule(RefreshTokens, token));
@@ -136,6 +138,14 @@ public class User : AggregateRoot<UserId>
         refreshToken.Revoke(ipAddress);
 
         return GenerateNewToken(tokenGenerator, ipAddress);
+    }
+
+    public void AddRole(RoleType roleType)
+    {
+        if (Roles.Contains(roleType))
+            return;
+
+        Roles.Add(roleType);
     }
 
     public void Active()

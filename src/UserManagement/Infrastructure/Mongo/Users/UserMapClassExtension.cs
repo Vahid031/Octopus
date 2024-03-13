@@ -33,7 +33,7 @@ internal class UserMapClassExtension
             cm.SetIgnoreExtraElements(true);
         });
 
-        BsonClassMap.RegisterClassMap<RefreshToken>(cm =>
+        BsonClassMap.RegisterClassMap<RefreshTokenInfo>(cm =>
         {
             cm.MapMember(m => m.Expires).SetElementName("Expires");
             cm.MapMember(m => m.RevokedByIp).SetElementName("RevokedByIp");

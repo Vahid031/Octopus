@@ -11,7 +11,7 @@ public abstract class AggregateRoot<TId> : EntityBase<TId> where TId : IIdBase
 
     protected AggregateRoot() => _events = new List<IDomainEvent>();
 
-    public AggregateRoot(IEnumerable<IDomainEvent> events)
+    protected AggregateRoot(IEnumerable<IDomainEvent> events)
     {
         if (events == null) return;
         foreach (var @event in events)
@@ -27,5 +27,7 @@ public abstract class AggregateRoot<TId> : EntityBase<TId> where TId : IIdBase
 
     public void ClearEvents() => _events.Clear();
 
-    protected void CheckRule([NotNull] IBusinessRule rule) => rule.Validate();
+    protected static void CheckRule([NotNull] IBusinessRule rule) => rule.Validate();
+
+    protected static Task CheckRuleAsync([NotNull] IAsyncBusinessRule rule) => rule.Validate();
 }

@@ -5,13 +5,13 @@ using Octopus.UserManagement.Core.Domain.Users.Services;
 
 namespace Octopus.UserManagement.Core.Domain.Users.Rules;
 
-internal class OtpCodeCheckRule : IBusinessRule
+internal class SignInWithOtpCodeRule : IBusinessRule
 {
     private readonly IOtpConfiguration _otpConfiguration;
     private readonly OtpCode _otpCode;
     private readonly string _code;
 
-    public OtpCodeCheckRule(IOtpConfiguration otpConfiguration, OtpCode otpCode, string code)
+    public SignInWithOtpCodeRule(IOtpConfiguration otpConfiguration, OtpCode otpCode, string code)
     {
         _otpConfiguration = otpConfiguration;
         _otpCode = otpCode;
@@ -23,7 +23,7 @@ internal class OtpCodeCheckRule : IBusinessRule
         if (_otpCode is null || !_otpCode.Code.Equals(_code))
             throw new InvalidOtpCodeException(_code);
 
-        if (!_otpCode.IsActive || _otpConfiguration.MaxRetryCount < _otpCode.RetryCount)
+        if (!_otpCode.IsRevoked || _otpConfiguration.MaxRetryCount < _otpCode.RetryCount || _otpConfiguration.IsExpired(_otpCode))
             throw new OtpCodeHasExpiredException(_code);
     }
 }

@@ -3,6 +3,7 @@ using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Shared;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
+using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
 namespace Octopus.UserManagement.Core.Mongo.Users;
 
@@ -24,6 +25,9 @@ internal class MongoUserRepository : MongoRepositoryBase<User, UserId>, IUserRep
         return await result.SingleOrDefaultAsync();
     }
 
-    public bool Exists(string userName) =>
-        _collection.Find(x => x.UserName == userName).Any();
+    public Task<bool> ExistsWithUserName(string userName) =>
+        _collection.Find(x => x.UserName == userName).AnyAsync();
+
+    public Task<bool> ExistsWithPhoneNumber(PhoneNumber phoneNumber) =>
+        _collection.Find(x => x.PhoneNumber == phoneNumber).AnyAsync();
 }

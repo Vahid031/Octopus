@@ -2,7 +2,7 @@
 
 namespace Octopus.UserManagement.Core.Domain.Users.Entities;
 
-public class RefreshToken : EntityBase
+public class RefreshTokenInfo : EntityBase
 {
     #region Properties
 
@@ -24,7 +24,7 @@ public class RefreshToken : EntityBase
 
     #endregion
 
-    private RefreshToken(string refreshToken, DateTimeOffset expires, string createdByIp)
+    private RefreshTokenInfo(string refreshToken, DateTimeOffset expires, string createdByIp)
     {
         Token = refreshToken;
         Expires = expires;
@@ -32,7 +32,7 @@ public class RefreshToken : EntityBase
         CreatedByIp = createdByIp;
     }
 
-    internal static RefreshToken Create(string refreshToken, DateTimeOffset expires, string createdByIp) =>
+    internal static RefreshTokenInfo Create(string refreshToken, DateTimeOffset expires, string createdByIp) =>
         new(refreshToken, expires, createdByIp);
 
     internal void Revoke(string revokedByIp)

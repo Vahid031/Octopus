@@ -4,11 +4,19 @@ using Octopus.UserManagement.Core.Domain.Users.Services;
 
 namespace Octopus.UserManagement.Core.Domain.Users.Rules;
 
-public class UserNameMustBeUniqueRule(IUserRepository UserRepository, string UserName) : IBusinessRule
+public class UserNameMustBeUniqueRule : IAsyncBusinessRule
 {
-	public void Validate()
-	{
-		if (UserRepository.Exists(UserName))
-			throw new UserNameMustBeUniqueException(UserName);
-	}
+    private readonly IUserRepository _userRepository;
+    private readonly string _userName;
+
+    public UserNameMustBeUniqueRule(IUserRepository userRepository, string userName)
+    {
+        _userRepository = userRepository;
+        _userName = userName;
+    }
+    public async Task Validate()
+    {
+        if (await _userRepository.ExistsWithUserName(_userName))
+            throw new UserNameMustBeUniqueException(_userName);
+    }
 }
