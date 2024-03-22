@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<RootNamespace>Octopus.Partner.Core.Application</RootNamespace>
+		<AssemblyName>Octopus.Partner.Core.Application</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\framework\Core\Application\Application.csproj" />
+		<ProjectReference Include="..\Contract\Contract.csproj" />
+	</ItemGroup>
+
+
+</Project>

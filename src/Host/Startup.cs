@@ -12,6 +12,10 @@ using Octopus.UserManagement.Core.Application;
 using Octopus.UserManagement.Core.Domain;
 using Octopus.UserManagement.Core.Mongo;
 using Octopus.UserManagement.Presentation.Http;
+using Octopus.Partner.Core.Application;
+using Octopus.Partner.Core.Domain;
+using Octopus.Partner.Core.Mongo;
+using Octopus.Partner.Presentation.Http;
 
 namespace Octopus.Host;
 
@@ -41,7 +45,12 @@ public class Startup
             .AddCatalogDomainServices()
             .AddCatalogApplicationServices()
             .AddCatalogMongoServices()
-            .AddCatalogHttpServices();
+            .AddCatalogHttpServices()
+            //partner
+            .AddPartnerDomainServices()
+            .AddPartnerApplicationServices()
+            .AddPartnerMongoServices()
+            .AddPartnerHttpServices();
 
 
         services.AddSwaggerGen(c =>
