@@ -35,6 +35,11 @@ internal class SignInWithOtpCommandHandler : IRequestHandler<SignInWithOtpComman
             throw new OctopusException("User with phone number: '{phoneNumber}' not found", request.PhoneNumber);
         }
 
+        user.TryOtp(request.Code);
+
+        await _userRepository.Update(user);
+        await _userRepository.Commit();
+
         var result = user.SignInWithOtp(_tokenGenerator, _otpConfiguration, request.Code, request.IpAddress);
 
         await _userRepository.Update(user);

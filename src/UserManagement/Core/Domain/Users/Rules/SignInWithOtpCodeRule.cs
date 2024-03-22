@@ -23,7 +23,7 @@ internal class SignInWithOtpCodeRule : IBusinessRule
         if (_otpCode is null || !_otpCode.Code.Equals(_code))
             throw new InvalidOtpCodeException(_code);
 
-        if (!_otpCode.IsRevoked || _otpConfiguration.MaxRetryCount < _otpCode.RetryCount || _otpConfiguration.IsExpired(_otpCode))
+        if (_otpCode.IsRevoked || _otpConfiguration.MaxRetryCount < _otpCode.RetryCount || _otpConfiguration.IsExpired(_otpCode))
             throw new OtpCodeHasExpiredException(_code);
     }
 }

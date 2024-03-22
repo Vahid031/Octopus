@@ -4,7 +4,7 @@ namespace Octopus.UserManagement.Core.Domain.Users.Services;
 
 public interface IOtpConfiguration
 {
-    bool IsExpired(OtpCode otpCode) => otpCode.CreatedAt.Add(ExpireDuration) <= DateTimeOffset.UtcNow;
+    bool IsExpired(OtpCode otpCode);
 
     TimeSpan ExpireDuration { get; }
 

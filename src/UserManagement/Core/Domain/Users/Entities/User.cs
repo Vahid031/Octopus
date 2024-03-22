@@ -91,11 +91,15 @@ public class User : AggregateRoot<UserId>
         return GenerateNewToken(tokenGenerator, ipAddress);
     }
 
+    public void TryOtp(string code)
+    {
+        OtpCodes.LastOrDefault()?.Retry();
+    }
+
     public TokenModel SignInWithOtp(IUserTokenGenerator tokenGenerator,
-        IOtpConfiguration otpConfiguration, string code, string ipAddress)
+    IOtpConfiguration otpConfiguration, string code, string ipAddress)
     {
         var otpCode = OtpCodes.LastOrDefault();
-        otpCode?.Retry();
 
         CheckRule(new SignInWithOtpCodeRule(otpConfiguration, otpCode, code));
 

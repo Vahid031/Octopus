@@ -11,7 +11,7 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddUserManagementMongoServices(this IServiceCollection services)
     {
-        services.AddSingleton<IUserRepository, FakeUserRepository>();
+        services.AddScoped<IUserRepository, MongoUserRepository>();
 
         services.AddSingleton(sp =>
         {

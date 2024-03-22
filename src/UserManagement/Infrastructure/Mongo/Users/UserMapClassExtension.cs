@@ -51,7 +51,7 @@ internal class UserMapClassExtension
             cm.MapMember(m => m.CreatedAt).SetElementName("CreatedAt");
             cm.MapMember(m => m.CreatedByIp).SetElementName("CreatedByIp");
             cm.MapMember(m => m.RetryCount).SetElementName("RetryCount");
-            cm.MapMember(m => m.RevokedAt).SetElementName("Revoked");
+            cm.MapMember(m => m.RevokedAt).SetElementName("RevokedAt");
             cm.MapMember(m => m.RevokedByIp).SetElementName("RevokedByIp");
 
             cm.SetIgnoreExtraElements(true);
