@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
 using Octopus.UserManagement.Core.Contract.Users.Commands.ChangePassword;
+using Octopus.UserManagement.Core.Contract.Users.Commands.RefreshToken;
 using Octopus.UserManagement.Core.Contract.Users.Commands.Register;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SetPassword;
@@ -98,7 +99,7 @@ public class UserController : ControllerBase
 	[ProducesResponseType(typeof(SuccessEnvelop<SendOtpResponse>), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
 	[HttpPost("otp/send")]
-	public async Task<ActionResult> SendOtp([FromBody] SendOtpRequest request)
+	public async Task<ActionResult<SendOtpResponse>> SendOtp([FromBody] SendOtpRequest request)
 	{
 		var command = new SendOtpCommand()
 		{
@@ -107,12 +108,28 @@ public class UserController : ControllerBase
         };
 
 		var expires = await _mediator.Send(command);
-		var sendOtpResponse = new SendOtpResponse() { Expires = expires };
 
-		return Ok(sendOtpResponse);
+		return new SendOtpResponse() { Expires = expires };
 	}
 
-	[ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(SuccessEnvelop<SendOtpResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<SignInResponse>> RefreshToken([FromBody] RefreshTokenRequest request)
+    {
+        var command = new RefreshTokenCommand()
+        {
+            UserName = request.UserName,
+			Token = request.Token,
+            IpAddress = Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString()
+        };
+
+        var result = await _mediator.Send(command);
+
+        return _mapper.Map<SignInResponse>(result); ;
+    }
+
+    [ProducesResponseType(typeof(SuccessEnvelop), StatusCodes.Status204NoContent)]
 	[ProducesResponseType(typeof(EnvelopError), StatusCodes.Status400BadRequest)]
 	[HttpPost("__register")]
 	public async Task<ActionResult> Register([FromBody] RegisterCommand request)

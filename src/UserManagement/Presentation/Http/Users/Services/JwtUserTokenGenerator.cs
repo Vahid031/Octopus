@@ -45,10 +45,10 @@ internal class JwtUserTokenGenerator : IUserTokenGenerator
 
         var expireIn = DateTime.UtcNow.Add(_jwtOptions.Value.TokenDuration);
 
-        return GenerateSignInModel(expireIn, ipAddress, claims.ToArray());
+        return GenerateSignInModel(user, expireIn, ipAddress, claims.ToArray());
     }
 
-    private TokenModel GenerateSignInModel(DateTime expires, string ipAddress, Claim[] claims)
+    private TokenModel GenerateSignInModel(UserInfoModel user, DateTime expires, string ipAddress, Claim[] claims)
     {
         JwtSecurityToken jwtSecurityToken = GenerateJsonWebToken(expires, claims);
 
@@ -59,7 +59,9 @@ internal class JwtUserTokenGenerator : IUserTokenGenerator
             RefreshToken = RandomTokenString(),
             RefreshTokenExpires = DateTimeOffset.UtcNow.Add(_jwtOptions.Value.RefreshTokenDuration),
             IpAddress = ipAddress,
-            AccessTokenExpires = expires
+            AccessTokenExpires = expires,
+            UserName = user.UserName,
+            PhoneNumber = user.PhoneNumber,
         };
     }
 

@@ -6,4 +6,6 @@ public record SignInResponse
     public long ExpireIn { get; init; }
     public string AccessToken { get; init; }
     public string RefreshToken { get; init; }
+    public string UserName { get; init; }
+    public string PhoneNumber { get; init; }
 }
