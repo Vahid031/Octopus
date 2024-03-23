@@ -62,25 +62,15 @@ public class PhoneNumber : ValueObject<PhoneNumber>
     public static explicit operator string(PhoneNumber phoneNumber) =>
         phoneNumber.ToString();
 
-    public override bool ObjectIsEqual(PhoneNumber other)
-    {
-        return other.CountryCode == CountryCode && other.Number == Number && other.Extension == Extension;
-    }
-
-    public override int ObjectGetHashCode()
-    {
-        return HashCode.Combine(CountryCode, Number, Extension);
-    }
-
     public override string ToString()
     {
         return $"+{CountryCode}{Number}{Extension}";
     }
 
-    protected IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return CountryCode;
         yield return Number;
-        yield return Extension ?? string.Empty;
+        yield return Extension;
     }
 }

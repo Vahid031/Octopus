@@ -9,19 +9,28 @@ where TValueObject : ValueObject<TValueObject>
             return false;
         return this == other;
     }
+
+    protected abstract IEnumerable<object> GetEqualityComponents();
+
     public override bool Equals(object obj)
     {
         if (obj is TValueObject other)
         {
             if (ReferenceEquals(this, other))
                 return true;
-            return ObjectIsEqual(other);
+            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
+
         return false;
     }
-    public override int GetHashCode() => ObjectGetHashCode();
-    public abstract bool ObjectIsEqual(TValueObject other);
-    public abstract int ObjectGetHashCode();
+
+    public override int GetHashCode()
+    {
+        return GetEqualityComponents()
+            .Select(x => x != null ? x.GetHashCode() : 0)
+            .Aggregate((x, y) => x ^ y);
+    }
+
     public static bool operator ==(ValueObject<TValueObject> right, ValueObject<TValueObject> left)
     {
         if (right is null && left is null)
