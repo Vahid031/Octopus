@@ -1,4 +1,4 @@
-﻿using Octopus.Catalog.Core.Domain.Products.Rules;
+﻿using Octopus.Catalog.Core.Domain.Products.Enums;
 using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 
@@ -6,28 +6,32 @@ namespace Octopus.Catalog.Core.Domain.Products.Entities;
 
 public class Product : AggregateRoot<ProductId>
 {
-    private Product() { }
-
-    private Product(ProductId id, string name, string code, string sku)
-    {
-        CheckRule(new ProductNameMustAtLeast5CharacterRule(name));
-
-        Id = id;
-        Name = name;
-        Code = code;
-        Sku = sku;
-    }
-
-    public static Product Create(ProductId id, string name, string code, string sku)
-        => new(id, name, code, sku);
+    #region Properties
 
     public string Name { get; private protected set; }
+
+    public string Description { get; private protected set; }
+
     public string Code { get; private protected set; }
-    public string Sku { get; private protected set; }
-    public long Price { get; private protected set; }
 
-    public void SetPrice(long price)
+    private List<ProductImageInfo> _images;
+    public IReadOnlyCollection<ProductImageInfo> Images
     {
-
+        get { return _images.AsReadOnly(); }
+        private protected set { _images = value.ToList(); }
     }
+
+    public ProductStatusType Status { get; private protected set; }
+
+    public BrandInfo Brand { get; private protected set; }
+
+    private List<CategoryInfo> _categories;
+    public IReadOnlyCollection<CategoryInfo> Categories
+    {
+        get { return _categories.AsReadOnly(); }
+        private protected set { _categories = value.ToList(); }
+    }
+
+    #endregion
+
 }

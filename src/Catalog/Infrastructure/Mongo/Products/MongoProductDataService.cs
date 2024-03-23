@@ -25,7 +25,7 @@ internal class MongoProductDataService(IMongoCollection<Product> collection) : I
         var items = await mongoQuery
               .Skip(query.Skip)
               .Limit(query.PageSize)
-              .Project(x => new ProductItemDto(x.Id, x.Name, x.Code, x.Sku))
+              .Project(x => new ProductItemDto(x.Id, x.Name, x.Code, string.Empty))
               .ToListAsync(cancellationToken);
 
         if (!items.Any())

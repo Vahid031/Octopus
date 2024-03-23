@@ -8,14 +8,7 @@
 		<RootNamespace>Octopus.Catalog.Core.Domain</RootNamespace>
 		<AssemblyName>Octopus.Catalog.Core.Domain</AssemblyName>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Folder Include="Products\Enums\" />
-	  <Folder Include="Products\Events\" />
-	  <Folder Include="Products\Specifications\" />
-	  <Folder Include="Products\ValueObjects\" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\..\framework\Core\Domain\Domain.csproj" />
 	</ItemGroup>
