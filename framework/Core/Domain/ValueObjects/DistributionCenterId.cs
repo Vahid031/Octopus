@@ -1,4 +1,6 @@
-﻿namespace Octopus.Core.Domain.ValueObjects;
+﻿using Octopus.Core.Domain.Exceptions;
+
+namespace Octopus.Core.Domain.ValueObjects;
 
 public class DistributionCenterId : IdBase<Guid>
 {
@@ -14,7 +16,7 @@ public class DistributionCenterId : IdBase<Guid>
         if (Guid.TryParse(value, out Guid id))
             return new(id);
 
-        throw new ArgumentException();
+        throw new InvalidArgumentToCreateValueObjectException<DistributionCenterId, Guid>(value);
     }
 
     public static DistributionCenterId New() => new(Guid.NewGuid());
