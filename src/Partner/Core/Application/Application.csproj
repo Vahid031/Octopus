@@ -14,5 +14,9 @@
 		<ProjectReference Include="..\Contract\Contract.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="DistributionCenters\" />
+	</ItemGroup>
+
 
 </Project>

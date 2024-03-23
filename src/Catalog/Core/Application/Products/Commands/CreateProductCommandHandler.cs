@@ -3,7 +3,7 @@ using Octopus.Catalog.Core.Contract.Products.Commands;
 using Octopus.Catalog.Core.Contract.Products.Notifications;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Catalog.Core.Domain.Products.Services;
-using Octopus.Catalog.Core.Domain.Products.ValueObjects;
+using Octopus.Core.Domain.ValueObjects;
 
 namespace Octopus.Catalog.Core.Application.Products.Commands;
 

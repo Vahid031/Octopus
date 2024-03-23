@@ -4,9 +4,9 @@ using MongoDB.Driver;
 using Octopus.Catalog.Core.Contract.Products.Services;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Catalog.Core.Domain.Products.Services;
-using Octopus.Catalog.Core.Domain.Products.ValueObjects;
 using Octopus.Catalog.Core.Mongo.Products;
 using Octopus.Core.Domain.Entities;
+using Octopus.Core.Domain.ValueObjects;
 
 namespace Octopus.Catalog.Core.Mongo;
 
@@ -21,16 +21,6 @@ public static class ServiceCollectionExtension
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
             return database.GetCollection<Product>(MongoProductRepository.CollectionName);
-        });
-
-
-        BsonSerializer.RegisterSerializer(new ProductIdBsonSerializer());
-
-        BsonClassMap.RegisterClassMap<EntityBase<ProductId>>(cm =>
-        {
-            cm.MapMember(m => m.Id).SetElementName("_id");
-
-            cm.SetIgnoreExtraElements(true);
         });
 
         BsonClassMap.RegisterClassMap<Product>(cm =>

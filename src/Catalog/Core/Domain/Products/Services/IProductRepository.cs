@@ -1,6 +1,6 @@
 ﻿using Octopus.Catalog.Core.Domain.Products.Entities;
-using Octopus.Catalog.Core.Domain.Products.ValueObjects;
 using Octopus.Core.Domain.Services;
+using Octopus.Core.Domain.ValueObjects;
 
 namespace Octopus.Catalog.Core.Domain.Products.Services;
 

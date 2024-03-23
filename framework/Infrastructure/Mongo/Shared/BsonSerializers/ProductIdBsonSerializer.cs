@@ -2,16 +2,16 @@
 using MongoDB.Bson.Serialization;
 using Octopus.Core.Domain.ValueObjects;
 
-namespace Octopus.UserManagement.Core.Mongo.Users;
-internal class UserIdBsonSerializer : IBsonSerializer<UserId>
+namespace Octopus.Infrastructure.Mongo.Shared.BsonSerializers;
+internal class ProductIdBsonSerializer : IBsonSerializer<ProductId>
 {
     object IBsonSerializer.Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         => Deserialize(context, args);
 
-    public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, UserId value)
+    public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ProductId value)
         => context.Writer.WriteString($"{value}");
 
-    public UserId Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+    public ProductId Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {
         if (context.Reader.CurrentBsonType == BsonType.Null)
         {
@@ -19,11 +19,11 @@ internal class UserIdBsonSerializer : IBsonSerializer<UserId>
             return null;
         }
 
-        return UserId.Create(context.Reader.ReadString());
+        return ProductId.Create(context.Reader.ReadString());
     }
 
     public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
-        => Serialize(context, args, value is null ? null : UserId.Create($"{value}"));
+        => Serialize(context, args, value is null ? null : ProductId.Create($"{value}"));
 
-    public Type ValueType => typeof(UserId);
+    public Type ValueType => typeof(ProductId);
 }

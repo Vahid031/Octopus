@@ -1,6 +1,4 @@
 ﻿using MongoDB.Bson.Serialization;
-using Octopus.Core.Domain.Entities;
-using Octopus.Core.Domain.ValueObjects;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
@@ -10,13 +8,6 @@ internal class UserMapClassExtension
 {
     internal static void Register()
     {
-        BsonClassMap.RegisterClassMap<EntityBase<UserId>>(cm =>
-        {
-            cm.MapMember(m => m.Id).SetElementName("_id");
-
-            cm.SetIgnoreExtraElements(true);
-        });
-
         BsonClassMap.RegisterClassMap<User>(cm =>
         {
             cm.MapMember(m => m.UserName).SetElementName("UserName");

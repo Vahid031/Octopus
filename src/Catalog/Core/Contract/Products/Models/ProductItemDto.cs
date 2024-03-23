@@ -1,4 +1,4 @@
-﻿using Octopus.Catalog.Core.Domain.Products.ValueObjects;
+﻿using Octopus.Core.Domain.ValueObjects;
 
 namespace Octopus.Catalog.Core.Contract.Products.Models;
 

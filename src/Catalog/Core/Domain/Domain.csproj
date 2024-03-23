@@ -13,6 +13,7 @@
 	  <Folder Include="Products\Enums\" />
 	  <Folder Include="Products\Events\" />
 	  <Folder Include="Products\Specifications\" />
+	  <Folder Include="Products\ValueObjects\" />
 	</ItemGroup>
 
 	<ItemGroup>

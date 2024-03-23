@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using Octopus.Partner.Core.Domain.DistributionCenters.Entities;
+using Octopus.Partner.Core.Domain.DistributionCenters.Services;
+using Octopus.UserManagement.Core.Mongo.Users;
 
 namespace Octopus.Partner.Core.Mongo;
 
@@ -6,34 +10,15 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddPartnerMongoServices(this IServiceCollection services)
     {
-        //    services.AddScoped<IProductRepository, MongoProductRepository>();
-        //    services.AddSingleton<IProductDataService, MongoProductDataService>();
+        services.AddScoped<IDistributionCenterRepository, MongoDistributionCenterRepository>();
 
-        //    services.AddSingleton(sp =>
-        //    {
-        //        var database = sp.GetRequiredService<IMongoDatabase>();
-        //        return database.GetCollection<Product>(MongoProductRepository.CollectionName);
-        //    });
+        services.AddSingleton(sp =>
+        {
+            var database = sp.GetRequiredService<IMongoDatabase>();
+            return database.GetCollection<DistributionCenter>(MongoDistributionCenterRepository.CollectionName);
+        });
 
-
-        //    BsonSerializer.RegisterSerializer(new ProductIdBsonSerializer());
-
-        //    BsonClassMap.RegisterClassMap<EntityBase<ProductId>>(cm =>
-        //    {
-        //        cm.MapMember(m => m.Id).SetElementName("_id");
-
-        //        cm.SetIgnoreExtraElements(true);
-        //    });
-
-        //    BsonClassMap.RegisterClassMap<Product>(cm =>
-        //    {
-        //        cm.MapMember(m => m.Sku).SetElementName("Sku");
-        //        cm.MapMember(m => m.Price).SetElementName("Price");
-        //        cm.MapMember(m => m.Code).SetElementName("Code");
-        //        cm.MapMember(m => m.Name).SetElementName("Name");
-
-        //        cm.SetIgnoreExtraElements(true);
-        //    });
+        DistributionCenterMapClassExtension.Register();
 
         return services;
     }

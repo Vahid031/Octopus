@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Catalog.Core.Domain.Products.Services;
-using Octopus.Catalog.Core.Domain.Products.ValueObjects;
+using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Shared;
 
 namespace Octopus.Catalog.Core.Mongo.Products;

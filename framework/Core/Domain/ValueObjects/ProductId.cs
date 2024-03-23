@@ -1,6 +1,4 @@
-﻿using Octopus.Core.Domain.ValueObjects;
-
-namespace Octopus.Catalog.Core.Domain.Products.ValueObjects;
+﻿namespace Octopus.Core.Domain.ValueObjects;
 
 public class ProductId : IdBase<Guid>
 {

@@ -26,11 +26,26 @@ public class User : AggregateRoot<UserId>
 
     public bool IsActivated { get; private protected set; }
 
-    public List<OtpCode> OtpCodes { get; private protected set; }
+    private List<OtpCode> _otpCodes;
+    public IReadOnlyCollection<OtpCode> OtpCodes
+    {
+        get { return _otpCodes.AsReadOnly(); }
+        private protected set { _otpCodes = value.ToList(); }
+    }
 
-    public List<RefreshTokenInfo> RefreshTokens { get; private protected set; }
+    private List<RefreshTokenInfo> _refreshTokens;
+    public IReadOnlyCollection<RefreshTokenInfo> RefreshTokens
+    {
+        get { return _refreshTokens.AsReadOnly(); }
+        private protected set { _refreshTokens = value.ToList(); }
+    }
 
-    public List<RoleType> Roles { get; private protected set; }
+    private List<RoleType> _roles;
+    public IReadOnlyCollection<RoleType> Roles
+    {
+        get { return _roles.AsReadOnly(); }
+        private protected set { _roles = value.ToList(); }
+    }
 
     #endregion
 
@@ -46,9 +61,9 @@ public class User : AggregateRoot<UserId>
         CreatedAt = DateTimeOffset.UtcNow;
         Id = id;
 
-        Roles = new List<RoleType>();
-        OtpCodes = new List<OtpCode>();
-        RefreshTokens = new List<RefreshTokenInfo>();
+        _roles = new List<RoleType>();
+        _otpCodes = new List<OtpCode>();
+        _refreshTokens = new List<RefreshTokenInfo>();
     }
 
     public static async Task<User> Create(IUserRepository userRepository, UserId id, string userName, PhoneNumber phoneNumber, string firstName, string lastName)
@@ -70,11 +85,11 @@ public class User : AggregateRoot<UserId>
 
     public OtpModel CreateNewOtpCode(IOtpConfiguration otpConfiguration, string ipAddress)
     {
-        CheckRule(new SendOtpCodeRule(otpConfiguration, OtpCodes));
+        CheckRule(new SendOtpCodeRule(otpConfiguration, _otpCodes));
 
         var otpCode = OtpCode.Create(ipAddress);
 
-        OtpCodes.Add(otpCode);
+        _otpCodes.Add(otpCode);
 
         return new OtpModel
         {
@@ -93,13 +108,13 @@ public class User : AggregateRoot<UserId>
 
     public void TryOtp(string code)
     {
-        OtpCodes.LastOrDefault()?.Retry();
+        _otpCodes.LastOrDefault()?.Retry();
     }
 
     public TokenModel SignInWithOtp(IUserTokenGenerator tokenGenerator,
     IOtpConfiguration otpConfiguration, string code, string ipAddress)
     {
-        var otpCode = OtpCodes.LastOrDefault();
+        var otpCode = _otpCodes.LastOrDefault();
 
         CheckRule(new SignInWithOtpCodeRule(otpConfiguration, otpCode, code));
 
@@ -110,10 +125,10 @@ public class User : AggregateRoot<UserId>
 
     private TokenModel GenerateNewToken(IUserTokenGenerator tokenGenerator, string ipAddress)
     {
-        var userInfo = new UserInfoModel(Id, FirstName, LastName, UserName, PhoneNumber.ToString(), Roles);
+        var userInfo = new UserInfoModel(Id, FirstName, LastName, UserName, PhoneNumber.ToString(), _roles);
         var tokenModel = tokenGenerator.GenerateToken(userInfo, ipAddress);
 
-        RefreshTokens.Add(RefreshTokenInfo.Create(tokenModel.RefreshToken, tokenModel.RefreshTokenExpires, tokenModel.IpAddress));
+        _refreshTokens.Add(RefreshTokenInfo.Create(tokenModel.RefreshToken, tokenModel.RefreshTokenExpires, tokenModel.IpAddress));
 
         return tokenModel;
     }
@@ -135,9 +150,9 @@ public class User : AggregateRoot<UserId>
     public TokenModel RefreshToken(IUserTokenGenerator tokenGenerator,
         string token, string ipAddress)
     {
-        CheckRule(new RefreshTokenCheckRule(RefreshTokens, token));
+        CheckRule(new RefreshTokenCheckRule(_refreshTokens, token));
 
-        var refreshToken = RefreshTokens.Single(t => t.Token.Equals(token));
+        var refreshToken = _refreshTokens.Single(t => t.Token.Equals(token));
 
         refreshToken.Revoke(ipAddress);
 
@@ -146,10 +161,10 @@ public class User : AggregateRoot<UserId>
 
     public void AddRole(RoleType roleType)
     {
-        if (Roles.Contains(roleType))
+        if (_roles.Contains(roleType))
             return;
 
-        Roles.Add(roleType);
+        _roles.Add(roleType);
     }
 
     public void Active()

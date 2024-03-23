@@ -1,7 +1,6 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 
-namespace Octopus.Infrastructure.Mongo.Shared;
+namespace Octopus.Infrastructure.Mongo.Shared.BsonSerializers;
 
 internal class DateTimeOffsetBsonSerializer : IBsonSerializer<DateTimeOffset>
 {

@@ -20,7 +20,6 @@ public static class ServiceCollectionExtension
         });
 
 
-        BsonSerializer.RegisterSerializer(new UserIdBsonSerializer());
         UserMapClassExtension.Register();
 
 

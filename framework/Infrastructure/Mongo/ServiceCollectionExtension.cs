@@ -4,8 +4,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Octopus.Core.Domain.Entities;
+using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Configurations;
 using Octopus.Infrastructure.Mongo.Shared;
+using Octopus.Infrastructure.Mongo.Shared.BsonSerializers;
 
 namespace Octopus.Infrastructure.Mongo;
 
@@ -33,6 +36,39 @@ public static class ServiceCollectionExtension
         });
 
         BsonSerializer.RegisterSerializer(new DateTimeOffsetBsonSerializer());
+
+        BsonSerializer.RegisterSerializer(new UserIdBsonSerializer());
+        BsonSerializer.RegisterSerializer(new ProductIdBsonSerializer());
+        BsonSerializer.RegisterSerializer(new DistributionCenterIdBsonSerializer());
+        BsonSerializer.RegisterSerializer(new BrandIdBsonSerializer());
+
+        BsonClassMap.RegisterClassMap<EntityBase<DistributionCenterId>>(cm =>
+        {
+            cm.MapMember(m => m.Id).SetElementName("_id");
+
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<EntityBase<UserId>>(cm =>
+        {
+            cm.MapMember(m => m.Id).SetElementName("_id");
+
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<EntityBase<ProductId>>(cm =>
+        {
+            cm.MapMember(m => m.Id).SetElementName("_id");
+
+            cm.SetIgnoreExtraElements(true);
+        });
+
+        BsonClassMap.RegisterClassMap<EntityBase<BrandId>>(cm =>
+        {
+            cm.MapMember(m => m.Id).SetElementName("_id");
+
+            cm.SetIgnoreExtraElements(true);
+        });
 
         return services;
     }
