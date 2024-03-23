@@ -26,17 +26,7 @@ public class Password : ValueObject<Password>
 	public static explicit operator (string PasswordSalt, string PasswordHash)(Password password) =>
 		FromPassword(password);
 
-	public override bool ObjectIsEqual(Password other)
-	{
-		return PasswordHash == other.PasswordHash && PasswordSalt == other.PasswordSalt;
-	}
-
-	public override int ObjectGetHashCode()
-	{
-		return HashCode.Combine(PasswordHash, PasswordSalt);
-	}
-
-	protected IEnumerable<object> GetEqualityComponents()
+	protected override IEnumerable<object> GetEqualityComponents()
 	{
 		yield return PasswordHash;
 		yield return PasswordSalt;
