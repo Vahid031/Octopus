@@ -20,6 +20,10 @@ using Octopus.Basket.Core.Application;
 using Octopus.Basket.Core.Domain;
 using Octopus.Basket.Infrastructure.Mongo;
 using Octopus.Basket.Presentation.Http;
+using Octopus.Checkout.Core.Application;
+using Octopus.Checkout.Core.Domain;
+using Octopus.Checkout.Infrastructure.Mongo;
+using Octopus.Checkout.Presentation.Http;
 
 namespace Octopus.Host;
 
@@ -59,7 +63,12 @@ public class Startup
             .AddBasketDomainServices()
             .AddBasketApplicationServices()
             .AddBasketMongoServices()
-            .AddBasketHttpServices();
+            .AddBasketHttpServices()
+            //checkout
+            .AddCheckoutDomainServices()
+            .AddCheckoutApplicationServices()
+            .AddCheckoutMongoServices()
+            .AddCheckoutHttpServices();
 
 
         services.AddSwaggerGen(c =>

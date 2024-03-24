@@ -26,6 +26,9 @@
 		<ProjectReference Include="..\Catalog\Core\Application\Application.csproj" />
 		<ProjectReference Include="..\Catalog\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\Catalog\Presentation\Http\Http.csproj" />
+		<ProjectReference Include="..\Checkout\Core\Application\Application.csproj" />
+		<ProjectReference Include="..\Checkout\Infrastructure\Mongo\Mongo.csproj" />
+		<ProjectReference Include="..\Checkout\Presentation\Http\Http.csproj" />
 		<ProjectReference Include="..\Partner\Core\Application\Application.csproj" />
 		<ProjectReference Include="..\Partner\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\Partner\Presentation\Http\Http.csproj" />
