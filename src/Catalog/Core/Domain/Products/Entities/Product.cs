@@ -12,7 +12,7 @@ public class Product : AggregateRoot<ProductId>
 
     public string Description { get; private protected set; }
 
-    public string Code { get; private protected set; }
+    public string Upc { get; private protected set; }
 
     private List<ProductImageInfo> _images;
     public IReadOnlyCollection<ProductImageInfo> Images
@@ -31,6 +31,14 @@ public class Product : AggregateRoot<ProductId>
         get { return _categories.AsReadOnly(); }
         private protected set { _categories = value.ToList(); }
     }
+
+    public decimal Weight { get; private protected set; }
+
+    public decimal Length { get; private protected set; }
+
+    public decimal Width { get; private protected set; }
+
+    public decimal Height { get; private protected set; }
 
     #endregion
 

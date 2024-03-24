@@ -1,10 +1,10 @@
-﻿using Octopus.Catalog.Core.Domain.Brands.Enums;
+﻿using Octopus.Catalog.Core.Domain.Products.Enums;
 using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 
-namespace Octopus.Catalog.Core.Domain.Brands.Entities;
+namespace Octopus.Catalog.Core.Domain.Categories.Entities;
 
-public class Brand : AggregateRoot<BrandId>
+public class Category : AggregateRoot<CategoryId>
 {
     #region Properties
 
@@ -14,7 +14,9 @@ public class Brand : AggregateRoot<BrandId>
 
     public string Description { get; private protected set; }
 
-    public BrandStatusType Status { get; private protected set; }
+    public CategoryId ParentId { get; private protected set; }
+
+    public ProductStatusType Status { get; private protected set; }
 
     #endregion
 }
