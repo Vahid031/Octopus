@@ -5,7 +5,7 @@ using Octopus.Catalog.Core.Contract.Products.Services;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Core.Contract.Queries;
 
-namespace Octopus.Catalog.Core.Mongo.Products;
+namespace Octopus.Catalog.Infrastructure.Mongo.Products;
 
 internal class MongoProductDataService(IMongoCollection<Product> collection) : IProductDataService
 {
@@ -25,7 +25,7 @@ internal class MongoProductDataService(IMongoCollection<Product> collection) : I
         var items = await mongoQuery
               .Skip(query.Skip)
               .Limit(query.PageSize)
-              .Project(x => new ProductItemDto(x.Id, x.Name, x.Code, string.Empty))
+              .Project(x => new ProductItemDto(x.Id, x.Name, "", string.Empty))
               .ToListAsync(cancellationToken);
 
         if (!items.Any())

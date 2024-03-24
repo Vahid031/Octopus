@@ -20,6 +20,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\framework\Infrastructure\Notification\Notification.csproj" />
+		<ProjectReference Include="..\Basket\Core\Application\Application.csproj" />
+		<ProjectReference Include="..\Basket\Infrastructure\Mongo\Mongo.csproj" />
+		<ProjectReference Include="..\Basket\Presentation\Http\Http.csproj" />
 		<ProjectReference Include="..\Catalog\Core\Application\Application.csproj" />
 		<ProjectReference Include="..\Catalog\Infrastructure\Mongo\Mongo.csproj" />
 		<ProjectReference Include="..\Catalog\Presentation\Http\Http.csproj" />

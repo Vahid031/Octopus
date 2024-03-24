@@ -2,9 +2,9 @@
 using MongoDB.Driver;
 using Octopus.Partner.Core.Domain.DistributionCenters.Entities;
 using Octopus.Partner.Core.Domain.DistributionCenters.Services;
-using Octopus.UserManagement.Core.Mongo.Users;
+using Octopus.UserManagement.Infrastructure.Mongo.Users;
 
-namespace Octopus.Partner.Core.Mongo;
+namespace Octopus.Partner.Infrastructure.Mongo;
 
 public static class ServiceCollectionExtension
 {

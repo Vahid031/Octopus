@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
-using Octopus.UserManagement.Core.Mongo.Users;
+using Octopus.UserManagement.Infrastructure.Mongo.Users;
 
-namespace Octopus.UserManagement.Core.Mongo;
+namespace Octopus.UserManagement.Infrastructure.Mongo;
 
 public static class ServiceCollectionExtension
 {

@@ -4,7 +4,7 @@ using Octopus.Catalog.Core.Domain.Products.Services;
 using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Shared;
 
-namespace Octopus.Catalog.Core.Mongo.Products;
+namespace Octopus.Catalog.Infrastructure.Mongo.Products;
 
 internal class MongoProductRepository : MongoRepositoryBase<Product, ProductId>, IProductRepository
 {

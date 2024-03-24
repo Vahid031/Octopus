@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using Octopus.Partner.Core.Domain.DistributionCenters.Entities;
 
-namespace Octopus.UserManagement.Core.Mongo.Users;
+namespace Octopus.UserManagement.Infrastructure.Mongo.Users;
 
 internal class DistributionCenterMapClassExtension
 {

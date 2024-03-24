@@ -3,9 +3,9 @@ using MongoDB.Driver;
 using Octopus.Catalog.Core.Contract.Products.Services;
 using Octopus.Catalog.Core.Domain.Products.Entities;
 using Octopus.Catalog.Core.Domain.Products.Services;
-using Octopus.Catalog.Core.Mongo.Products;
+using Octopus.Catalog.Infrastructure.Mongo.Products;
 
-namespace Octopus.Catalog.Core.Mongo;
+namespace Octopus.Catalog.Infrastructure.Mongo;
 
 public static class ServiceCollectionExtension
 {

@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Octopus.Catalog.Core.Application;
 using Octopus.Catalog.Core.Domain;
-using Octopus.Catalog.Core.Mongo;
+using Octopus.Catalog.Infrastructure.Mongo;
 using Octopus.Catalog.Presentation.Http;
 using Octopus.Host.Middlewares;
 using Octopus.Infrastructure.Mongo;
@@ -10,12 +10,16 @@ using Octopus.Infrastructure.Notification;
 using Octopus.Presentation.Http;
 using Octopus.UserManagement.Core.Application;
 using Octopus.UserManagement.Core.Domain;
-using Octopus.UserManagement.Core.Mongo;
+using Octopus.UserManagement.Infrastructure.Mongo;
 using Octopus.UserManagement.Presentation.Http;
 using Octopus.Partner.Core.Application;
 using Octopus.Partner.Core.Domain;
-using Octopus.Partner.Core.Mongo;
+using Octopus.Partner.Infrastructure.Mongo;
 using Octopus.Partner.Presentation.Http;
+using Octopus.Basket.Core.Application;
+using Octopus.Basket.Core.Domain;
+using Octopus.Basket.Infrastructure.Mongo;
+using Octopus.Basket.Presentation.Http;
 
 namespace Octopus.Host;
 
@@ -50,7 +54,12 @@ public class Startup
             .AddPartnerDomainServices()
             .AddPartnerApplicationServices()
             .AddPartnerMongoServices()
-            .AddPartnerHttpServices();
+            .AddPartnerHttpServices()
+            //basket
+            .AddBasketDomainServices()
+            .AddBasketApplicationServices()
+            .AddBasketMongoServices()
+            .AddBasketHttpServices();
 
 
         services.AddSwaggerGen(c =>

@@ -5,8 +5,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<RootNamespace>Octopus.Partner.Core.Mongo</RootNamespace>
-		<AssemblyName>Octopus.Partner.Core.Mongo</AssemblyName>
+		<RootNamespace>Octopus.Partner.Infrastructure.Mongo</RootNamespace>
+		<AssemblyName>Octopus.Partner.Infrastructure.Mongo</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>

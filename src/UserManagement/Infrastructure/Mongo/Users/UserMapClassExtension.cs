@@ -2,7 +2,7 @@
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.ValueObjects;
 
-namespace Octopus.UserManagement.Core.Mongo.Users;
+namespace Octopus.UserManagement.Infrastructure.Mongo.Users;
 
 internal class UserMapClassExtension
 {
