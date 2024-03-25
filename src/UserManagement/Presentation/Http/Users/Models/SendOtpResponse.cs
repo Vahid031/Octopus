@@ -2,5 +2,5 @@
 
 public record SendOtpResponse
 {
-	public DateTimeOffset Expires { get; init; }
+	public TimeSpan Expires { get; init; }
 }
