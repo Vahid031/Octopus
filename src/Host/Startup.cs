@@ -49,6 +49,7 @@ public class Startup
             .AddMongoServices(_configuration)
             .AddHttpServices()
             .AddNotificationServices(_configuration)
+            .AddApplicationServices(_configuration)
             //user management
             .AddUserManagementApplicationServices(_configuration)
             .AddUserManagementHttpServices(_configuration)

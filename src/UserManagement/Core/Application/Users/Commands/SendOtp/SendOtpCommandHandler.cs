@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Octopus.Core.Application.Events;
+using Octopus.Core.Contract.Events;
 using Octopus.Core.Contract.Exceptions;
 using Octopus.Core.Contract.Services;
 using Octopus.UserManagement.Core.Contract.Users.Commands.SendOtp;
@@ -43,9 +43,9 @@ internal class SendOtpCommandHandler : IRequestHandler<SendOtpCommand, TimeSpan>
 
 		// ToDo: Replace magic word with const
 		var message = $"Your code : {otp.Code}";
-		var @event = new SendSmsIntegrationEvent("UserManagement", message, user.PhoneNumber.ToString());
+		var @event = new SendSmsIntegrationEvent("UserManagement", user.Id, message, user.PhoneNumber.ToString());
 
-		await _messageDispatcher.Raise(@event);
+		await _messageDispatcher.Raise(@event, cancellationToken);
 
 		var expires = otp.Expires - DateTimeOffset.Now;
 

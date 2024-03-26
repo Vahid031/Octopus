@@ -1,13 +1,18 @@
-﻿namespace Octopus.Core.Contract.Events;
+﻿using MediatR;
+using Octopus.Core.Domain.ValueObjects;
 
-public abstract class IntegrationEvent
+namespace Octopus.Core.Contract.Events;
+
+public abstract class IntegrationEvent : INotification
 {
-    public Guid EventId { get; }
-    public string Sender { get; }
+    public string Sender { get; private protected set; }
+    public UserId AccuredBy { get; private protected set; }
+    public Guid EventId { get; private protected set; }
 
-    protected IntegrationEvent(Guid eventId, string sender)
+    protected IntegrationEvent(Guid eventId, string sender, UserId accuredBy)
     {
-        EventId = eventId;
         Sender = sender;
+        AccuredBy = accuredBy;
+        EventId = eventId;
     }
 }
