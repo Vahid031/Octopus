@@ -24,6 +24,11 @@ using Octopus.Checkout.Core.Application;
 using Octopus.Checkout.Core.Domain;
 using Octopus.Checkout.Infrastructure.Mongo;
 using Octopus.Checkout.Presentation.Http;
+using Octopus.FileManager.Core.Application;
+using Octopus.FileManager.Core.Domain;
+using Octopus.FileManager.Infrastructure.Mongo;
+using Octopus.FileManager.Infrastructure.Ftp;
+using Octopus.FileManager.Presentation.Http;
 
 namespace Octopus.Host;
 
@@ -68,7 +73,13 @@ public class Startup
             .AddCheckoutDomainServices()
             .AddCheckoutApplicationServices()
             .AddCheckoutMongoServices()
-            .AddCheckoutHttpServices();
+            .AddCheckoutHttpServices()
+            //file manager
+            .AddFileManagerDomainServices()
+            .AddFileManagerApplicationServices(_configuration)
+            .AddFileManagerMongoServices()
+            .AddFileManagerFtpServices(_configuration)
+            .AddFileManagerHttpServices();
 
 
         services.AddSwaggerGen(c =>

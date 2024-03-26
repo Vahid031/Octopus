@@ -5,21 +5,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<RootNamespace>Octopus.Core.Application</RootNamespace>
-		<AssemblyName>Octopus.Core.Application</AssemblyName>
+		<RootNamespace>Octopus.FileManager.Infrastructure.Ftp</RootNamespace>
+		<AssemblyName>Octopus.FileManager.Infrastructure.Ftp</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+		<PackageReference Include="FluentFTP" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<ProjectReference Include="..\Contract\Contract.csproj" />
+		<ProjectReference Include="..\..\Core\Contract\Contract.csproj" />
 	</ItemGroup>
 
 </Project>

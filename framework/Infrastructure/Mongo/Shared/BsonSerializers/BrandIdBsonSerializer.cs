@@ -24,7 +24,7 @@ internal class BrandIdBsonSerializer : IBsonSerializer<BrandId>
     }
 
     public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
-        => Serialize(context, args, value is null ? null : DistributionCenterId.Create($"{value}"));
+        => Serialize(context, args, value is null ? null : BrandId.Create($"{value}"));
 
     public Type ValueType => typeof(BrandId);
 }
