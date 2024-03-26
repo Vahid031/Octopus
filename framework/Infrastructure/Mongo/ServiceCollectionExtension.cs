@@ -72,4 +72,15 @@ public static class ServiceCollectionExtension
 
         return services;
     }
+
+    public static void AddMongoCollection<TAggregate, TId>(this IServiceCollection services, string collectionName)
+        where TAggregate : AggregateRoot<TId>
+        where TId : IIdBase
+    {
+        services.AddSingleton(sp =>
+        {
+            var database = sp.GetRequiredService<IMongoDatabase>();
+            return database.GetCollection<TAggregate>(collectionName);
+        });
+    }
 }

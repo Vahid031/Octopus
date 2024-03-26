@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
+using Octopus.Core.Domain.ValueObjects;
+using Octopus.Infrastructure.Mongo;
 using Octopus.UserManagement.Core.Domain.Users.Entities;
 using Octopus.UserManagement.Core.Domain.Users.Services;
 using Octopus.UserManagement.Infrastructure.Mongo.Users;
@@ -12,12 +13,7 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped<IUserRepository, MongoUserRepository>();
 
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<User>(MongoUserRepository.CollectionName);
-        });
-
+        services.AddMongoCollection<User, UserId>(MongoUserRepository.CollectionName);
 
         UserMapClassExtension.Register();
 
