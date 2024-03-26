@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Octopus.Core.Contract.Outboxes;
+using Octopus.Core.Contract.Services;
 using Octopus.Core.Domain.Entities;
 using Octopus.Core.Domain.ValueObjects;
 using Octopus.Infrastructure.Mongo.Configurations;
+using Octopus.Infrastructure.Mongo.Outboxes;
 using Octopus.Infrastructure.Mongo.Shared;
 using Octopus.Infrastructure.Mongo.Shared.BsonSerializers;
 
@@ -17,10 +19,20 @@ public static class ServiceCollectionExtension
     public static IServiceCollection AddMongoServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.TryAddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton<IOutboxRepository, MongoOutboxRepository>();
+
+        services.AddSingleton(sp =>
+        {
+            var database = sp.GetRequiredService<IMongoDatabase>();
+            return database.GetCollection<Outbox>(MongoOutboxRepository.CollectionName);
+        });
 
         services.AddOptions<MongoOptions>()
             .Bind(configuration.GetSection(nameof(MongoOptions)));
+
+        services.AddOptions<OutboxOptions>()
+           .Bind(configuration.GetSection(nameof(OutboxOptions)));
 
         services.AddSingleton<IMongoClient>(sp =>
         {
@@ -69,6 +81,8 @@ public static class ServiceCollectionExtension
 
             cm.SetIgnoreExtraElements(true);
         });
+
+        OutboxMapClassExtension.Register();
 
         return services;
     }

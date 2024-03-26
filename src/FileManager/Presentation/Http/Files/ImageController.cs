@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Octopus.Core.Domain.ValueObjects;
 using Octopus.FileManager.Core.Contract.Files.Commands;
 using Octopus.Presentation.Http;
 using Octopus.Presentation.Http.EnvelopModels;
